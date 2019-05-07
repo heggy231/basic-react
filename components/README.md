@@ -66,3 +66,14 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+* First iteration:
+![blog post](https://cdn.glitch.com/cb093bfd-142f-45b3-bdb4-52ff49e0a1c2%2FScreen%20Shot%202019-05-01%20at%208.25.14%20AM.png?1556724330115)
+
+Goal: first create a naive approach create as one file
+next break it down to 2 separate with CommentDetail.js component (child) and index.js (parent)
+
+* Next iteration:
+ApprovalCard as new component 
+![Approval Card](https://cdn.glitch.com/cb093bfd-142f-45b3-bdb4-52ff49e0a1c2%2FScreen%20Shot%202019-05-07%20at%2012.52.12%20PM.png?1557258791299)
