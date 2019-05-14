@@ -24,6 +24,13 @@ class App extends React.Component {
     );
   }
 
+  componentDidMount() {
+    console.log('My component was rendered to the screen.');
+  }
+
+  componentDidUpdate() {
+    console.log('My component was just updated - it rerendered!');
+  }
   // React requires we have to define render method!! return JSX
   render() {
     if (this.state.errorMessage && !this.state.lat) {
