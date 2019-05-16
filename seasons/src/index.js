@@ -13,23 +13,20 @@ class App extends React.Component {
       lat: null, 
       errorMessage: ''
     };
+    
+  }
+
+// componentDidMount() only gets called once
+  componentDidMount() {
+    // console.log('My component was rendered to the screen.');
     window.navigator.geolocation.getCurrentPosition(
-      position => {
-        // We called setstate!!
-        this.setState({ lat: position.coords.latitude });
-      }, 
-      err => {
-        this.setState({ errorMessage: err.message });
-      }
+      position => this.setState({ lat: position.coords.latitude }), 
+      err => this.setState({ errorMessage: err.message })
     );
   }
 
-  componentDidMount() {
-    console.log('My component was rendered to the screen.');
-  }
-
   componentDidUpdate() {
-    console.log('My component was just updated - it rerendered!');
+    console.log('My component was just updated - it re-ßrendered!');
   }
   // React requires we have to define render method!! return JSX
   render() {
