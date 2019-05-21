@@ -1,20 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
-  // define constructor > to initialize 
-  constructor(props) {
-    // ceremonial part when doing constructor function
-    // super() calls for parent constructor function from React.Component 
-    super(props);
-    // This is only TIME we do direct assignment to this state
-    this.state = {
-      // sensible to assign null when we don't know what to assign
-      lat: null, 
-      errorMessage: ''
-    };
-    
-  }
+
+  state = { 
+    lat: null, 
+    errorMessage: '' 
+  };
 
 // componentDidMount() only gets called once
   componentDidMount() {
@@ -26,7 +19,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('My component was just updated - it re-ßrendered!');
+    console.log('My component was just updated - it re-rendered!');
   }
   // React requires we have to define render method!! return JSX
   render() {
@@ -35,12 +28,11 @@ class App extends React.Component {
     }
 
     if (!this.state.errorMessage && this.state.lat) {
-      return <div>Latitude: {this.state.lat}</div>;
+      return <SeasonDisplay lat={this.state.lat} />
     }
 
     return <div>Loading!</div>;
   }
 }
-
 
 ReactDOM.render(<App />, document.querySelector('#root'));
