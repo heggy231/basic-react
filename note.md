@@ -31039,3 +31039,4 @@ https://www.linkedin.com/learning/learning-git-and-github/deleting-files?u=21040
 > git checkout index.html // revert back the changes to index but only after you did reset HEAD onto that file.
 
 > git rm about.html // delete the file
+
