@@ -12,6 +12,7 @@
 	right: 10px;
 }
 
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity#The_!important_exception */
 .season-display.winter i {
 	color: blue;
 }

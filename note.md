@@ -31040,3 +31040,52 @@ https://www.linkedin.com/learning/learning-git-and-github/deleting-files?u=21040
 
 > git rm about.html // delete the file
 
+- getting the semantic ui to loading spinner
+https://semantic-ui.com/elements/loader.html
+
+  import React from 'react';
+
+  const Spinner = () => {
+    return (
+      <div className="ui active dimmer">
+        <div className="ui big text loader">
+          Loading...
+        </div>
+      </div>
+    );
+  };
+
+  export default Spinner;
+
+  under index.js)
+  render() {
+    return <Spinner message="please share your location"/>
+  }
+
+- To get the seonsors to show up
+cmd + shift + c > on console tab > hit esc > hit three dots
+  > sensors > Geolocation > Sao Paulo for different weather than here.
+
+
+- to get the default message for react 
+option1) 
+import React from 'react';
+
+const Spinner = (props) => {
+  return (
+    <div className="ui active dimmer">
+      <div className="ui big text loader">
+        {props.message || "Loading"}
+      </div>
+    </div>
+  );
+};
+
+export default Spinner;
+
+inside index.js) 
+
+  render() {
+    return <Spinner />
+  }
+
