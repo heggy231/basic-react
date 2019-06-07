@@ -31089,3 +31089,143 @@ inside index.js)
     return <Spinner />
   }
 
+(new update using .defaultProps)
+import React from 'react';
+
+const Spinner = (props) => {
+  return (
+    <div className="ui active dimmer">
+      <div className="ui big text loader">
+        {props.message}
+      </div>
+    </div>
+  );
+};
+
+Spinner.defaultProps = {
+  message: 'Loading...'
+};
+
+export default Spinner;
+
+
+-- react functional based to class based component:
+// functional component declaration, usecase: we need state or lifecycle method so we need to convert into class based component
+const UserForm = () => { // this is function declaration
+  return (
+    <form>
+      <label>Enter a username:</label>
+      <input />
+    </form>
+  );
+}
+
+// class based component
+class UserForm extends React.Component { // class declaration
+  render() { // wrap return stmt, jsx inside of render method
+    return (
+      <form>
+        <label>Enter a username:</label>
+        <input />
+      </form>
+    ) 
+  }
+}
+
+- How to convert from functional component to class based component?
+1) replace `const` to `class`
+const UserFom ==> class UserForm
+
+2) extend to React.Component
+const UserForm = () => {} // functional 
+class UserForm extends React.Component {} // class based component
+
+3) wrap the return stmt inside of render method:
+render () {
+  return ( // jsx
+    <form>
+      <label>Enter a username:</label>
+      <input />
+    </form>
+  );
+}
+
+4) Final:
+class UserForm extends React.Component {
+  render() {
+    return (
+      <form>
+        <label>Enter a username:</label>
+        <input />
+      </form>
+    ) 
+  }
+}
+
+- Quiz2) Update Components with State:
+** Clock problem:
+
+challenge wrong:
+<script type="text/babel" data-presets="env,react">
+    class Clock extends React.Component {
+        componentDidMount() 
+
+            setInterval(() => {
+              // this.time is an instance of time doesn't update the component.  Whenever we assign the instance variable this doesn't automatically update component.  
+                this.time = new Date().toLocaleTimeString()    
+            }, 1000)
+        }
+        
+        render() {
+            return (
+                <div className="time">
+                    The time is: {this.time}
+                </div>
+            );
+        }
+    }
+      // Renders the App component into a div with id 'root'
+    ReactDOM.render(<Clock />, document.querySelector('#root'));
+</script>
+
+** Clock solution:
+https://codepen.io/heggy231/pen/QReNdO?editors=1000
+```
+<script type="text/babel" data-presets="env,react">
+
+  class Clock extends React.Component {
+    // first initialize the first obj
+    state = {
+        time: ``
+    };
+    
+    componentDidMount() {
+       // get rid of the instance this.time to .setState() to rerender itself auto.  
+        setInterval(() => {
+          // this.setState() inside obj
+            this.setState({ time: new Date().toLocaleTimeString() })
+        }, 1000);
+    }
+    
+    render() {
+        return (
+            <div className="time">
+                The time is: {this.state.time}
+            </div>
+        );
+    }
+  }
+      // Renders the App component into a div with id 'root'
+    ReactDOM.render(<Clock />, document.querySelector('#root'));
+</script>
+```
+
+
+
+
+
+
+
+
+
+
