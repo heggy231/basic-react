@@ -31219,13 +31219,33 @@ https://codepen.io/heggy231/pen/QReNdO?editors=1000
     ReactDOM.render(<Clock />, document.querySelector('#root'));
 </script>
 ```
+- Next app `pics`: 2 components: SearchBar, ImageList
+  * SearchBar components: showing text input
+    When user types> hadle that typing event 
+  * ImageList Component: List of img > render them out as a list on the screen.
+
+(First draft 1)-
+App -|
+     |_ Search Bar
+     |_ ImageList
 
 
+- public > index.html has the id="root"
+  inside of index.js)
+  `ReactDOM.render(
+    <App />, 
+    document.querySelector('#root')
+  );
+  
+  - finally)
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+  import App from './components/App';
 
+  ReactDOM.render(
+    <App />, 
+    document.querySelector('#root')
+  );
 
-
-
-
-
-
+- inside of SearchBar.js)
 
