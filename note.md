@@ -5659,7 +5659,7 @@ class FlashcardContainer extends Component {
       }
     }
 
-// 3rd party API called componentDidMount(), eventListener goes under DidMount() Too!
+// 3rd party API called during componentDidMount(), eventListener goes under DidMount() Too!
   componentDidMount() {
     // add event listener 
     window.addEventListener('keyup', this.handleKeyup)
@@ -31248,4 +31248,63 @@ App -|
   );
 
 - inside of SearchBar.js)
+  1) Insert semantic ui min.css cdn inside of public > inside of index.html
+  2) To insert style for card: 
+  <div class="ui segment">
+    <p></p>
+  </div>
+
+- We want event fire when onInputChange() happens
+User types > get notified
+
+  onInputChange() { // method gets called any time user inputs something inside of `input`
+
+  }
+
+  render() {
+    return (
+      <div className="ui segment">
+        <form className="ui form">
+          <div className="field>
+            <label>Image Search</label>
+            <input type="text" onChange={this.onInputChange}>
+    )
+  }
+
+var seasonConfig = {
+  summer: {
+    text: 'Lets hit the beach',
+    iconName: 'sun'
+  },
+  winter: {
+    text: 'Burr it is cold!',
+    iconName: 'snowflake'
+  }
+}
+
+// ES6 supports destructuring: you can create a variable with the same name as an equivalent object property. For example:  https://www.sitepoint.com/es6-enhanced-object-literals/
+var { text, iconName } = seasonConfig["summer"];
+// => text => "Lets hit the beach", iconName => "sun"
+text
+iconName
+
+//=================================================================================================
+// ES5 explicit extract a property value from an obj into another variable
+
+var seasonConfig = {
+  summer: {
+    text: 'Lets hit the beach',
+    iconName: 'sun'
+  },
+  winter: {
+    text: 'Burr it is cold!',
+    iconName: 'snowflake'
+  }
+}
+
+var text = seasonConfig.summer.text; // 'Lets hit the beach'
+// or
+var text = seasonConfig["summer"]["text"]; // 'Lets hit the beach'
+
+// demo of destructuring: https://codepen.io/heggy231/pen/mZboZX?editors=0010
 
