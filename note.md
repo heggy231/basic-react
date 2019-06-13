@@ -31308,3 +31308,4 @@ var text = seasonConfig["summer"]["text"]; // 'Lets hit the beach'
 
 // demo of destructuring: https://codepen.io/heggy231/pen/mZboZX?editors=0010
 
+- fragment- (2 div)
