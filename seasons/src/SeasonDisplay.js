@@ -2,9 +2,15 @@ import './SeasonDisplay.css';
 import React from 'react';
 
 const seasonConfig = {
+  spring: {
+    text: 
+  },
   summer: {
     text: 'Lets hit the beach',
     iconName: 'sun'
+  },
+  fall: {
+
   },
   winter: {
     text: 'Burr it is cold!',
