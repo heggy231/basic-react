@@ -31314,3 +31314,53 @@ var text = seasonConfig["summer"]["text"]; // 'Lets hit the beach'
 app > 
     > SearchBar
     > ImageList
+
+
+SearchBar.js)
+mport React from 'react';
+
+class SearchBar extends React.Component {
+  // when user types call this method
+  onInputChange(event) {
+    console.log(event.target.value);
+  }
+
+  render() {
+    return (
+      <div className="ui segment">    
+        <form className="ui form">
+          <div className="field">
+            {/* label for the image search: Image Search */}
+            <label>Image Search</label>
+            {/* when refer to this.onInputChange remember to leave out () 
+              We do mpt put () >> when we pass a callback function to an event handler
+              - call .onInputChange() when user types anything on field which event.target.value get the info.
+
+              - onChange: different events has different prop names, this case prop name: onChange
+            */}
+            <input type="text" onChange={this.onInputChange} />
+          </div>
+
+        </form>
+      </div>
+    );
+  }
+}
+
+export default SearchBar;
+
+- Whenever input field has a change > onChange prop get the value
+Other events:  when we pass function to onChange > it will be called automatically > when user interacts with your website.  
+  1) onClick - User clicks on something  <a onClick={this.onUserClick}> </a>
+    when user clicks on the element, the cb function will be called.
+  2) onChange - User changes text in an input field <input onChange={this.onInputChange}/>
+    onChange(event) {
+      cons
+    }
+  3) onSubmit - User submits a form (works with form element)
+  <form>
+    <input type=submit onSubmit={this.onSubmission}/>
+  </form>
+
+
+
