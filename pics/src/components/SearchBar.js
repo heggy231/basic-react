@@ -1,10 +1,9 @@
 import React from 'react';
 
 class SearchBar extends React.Component {
-  // when user types call this method
-  onInputChange(event) {
-    console.log(event.target.value);
-  }
+  state = {
+    term: '',
+  };
 
   render() {
     return (
@@ -18,8 +17,10 @@ class SearchBar extends React.Component {
               - call .onInputChange() when user types anything on field which event.target.value get the info.
 
               - onChange: different events has different prop names, this case prop name: onChange
+              - refactoring to controlled element vs Uncontrolled Click event earlier
+
             */}
-            <input type="text" onChange={ (e) => console.log(e.target.value) } />
+            <input type="text" value={this.state.term} onChange={ (e) => this.setState({ term: e.target.value }) } />
           </div>
 
         </form>

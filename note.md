@@ -31376,3 +31376,8 @@ option2)
  }
 
  <input type="text" onChange={this.onInputChange} />
+
+ - Controlled vs. Uncontrolled form element
+ We react dev pref Controlled components
+
+Uncontrolled Click event --> refactor to --> controlled element
