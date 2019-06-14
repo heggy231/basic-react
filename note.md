@@ -31358,9 +31358,21 @@ Other events:  when we pass function to onChange > it will be called automatical
       cons
     }
   3) onSubmit - User submits a form (works with form element)
-  <form>
-    <input type=submit onSubmit={this.onSubmission}/>
+  <form onSubmit={this.onSubmission}>
+    <input type="submit" />
   </form>
 
 
+- refactor of event handler function (single line of code arrow function):
 
+option1) 
+ <input type="text" onChange={ (e) => console.log(e.target.value) } />  // when you have single line of code that we want to execute anytime that some event occurs.  Note: no semi-colon here! 
+
+ ########### OR ############# 
+
+option2) 
+ onInputChange (event) {
+   console.log(event.target.value);
+ }
+
+ <input type="text" onChange={this.onInputChange} />

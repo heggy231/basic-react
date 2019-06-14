@@ -3,24 +3,13 @@ import React from 'react';
 class SearchBar extends React.Component {
   // when user types call this method
   onInputChange(event) {
-    console.log("######## event object: #######", event);
     console.log(event.target.value);
-  }
-
-  onInputClick() {
-    console.log('Input was clicked');
-  }
-
-  handleSubmit(e) {
-    console.log('form was submitted');
-    console.log(e.target.value);
-    debugger;
   }
 
   render() {
     return (
       <div className="ui segment">    
-        <form className="ui form" onSubmit={this.handleSubmit}>
+        <form className="ui form">
           <div className="field">
             {/* label for the image search: Image Search */}
             <label>Image Search</label>
@@ -30,9 +19,7 @@ class SearchBar extends React.Component {
 
               - onChange: different events has different prop names, this case prop name: onChange
             */}
-            {/* <input type="text" onChange={this.onInputChange} onClick={this.onInputClick} /> */}
-            <input type="text" placeholder="You got it toyota" />
-            <input type="submit" value="submit" />
+            <input type="text" onChange={ (e) => console.log(e.target.value) } />
           </div>
 
         </form>
