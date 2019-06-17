@@ -31381,3 +31381,56 @@ option2)
  We react dev pref Controlled components
 
 Uncontrolled Click event --> refactor to --> controlled element
+
+
+- where to put javascript tag js tag html
+https://stackoverflow.com/questions/143486/unobtrusive-javascript-script-at-the-top-or-the-bottom-of-the-html-code
+There are two possibilities for truly unobtrusive scripts:
+
+  * including an external script file via a script tag in the head section
+  * including an external script file via a script tag at the bottom of the body (just before </body></html>)
+
+
+- JS only Input value change:
+https://codepen.io/heggy231/pen/KjdoJX?editors=1000
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+  <title>Notify JS only</title>
+</head>
+<!-- 
+  when user types something and enters >> Js is notified to do an action 
+-->
+<body>
+  <div class="ui placeholder segment">
+    <form class="ui form">
+      <div class="field">
+        <label>Search:</label>
+        <input type="text" id="myText" placeholder="type here" onkeyup="onInputChange()" value="">
+      </div>
+    </form>
+  </div>
+
+  <script type="text/javascript" defer>
+    // https://codeburst.io/javascript-arrow-functions-for-beginners-926947fc0cdc  fat arrow function resource
+    // document.getElementById("myText").value = "My friend";
+    // function onInputChange () {
+    //   let userSearchTerm = document.getElementById("myText").value;
+    //   window.alert(userSearchTerm);
+    // }
+    onInputChange = () => {
+      let userSearchTerm = document.getElementById("myText").value;
+      window.alert(`Your search term is ${userSearchTerm}`);
+      console.log(userSearchTerm);
+    }
+  </script>
+</body>
+</html>
+
+- React only Input value change: (https://codepen.io/heggy231/pen/ewJzYg)
+
