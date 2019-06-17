@@ -1,9 +1,18 @@
 import React from 'react';
 
 class SearchBar extends React.Component {
+  // control vs uncontrolled using state makes it control
   state = {
-    term: '',
+    // since state is controlling the data we can set the 
+    //  initialization value.
+    term: 'Enter your question',
   };
+
+  // onInputClick() {
+  //   console.log("Input was clicked!")
+  // }
+  //  REMEMBER to add onClick={ this.onInputClick} 
+  //   inside of input tag to get this function working
 
   render() {
     return (
@@ -18,9 +27,16 @@ class SearchBar extends React.Component {
 
               - onChange: different events has different prop names, this case prop name: onChange
               - refactoring to controlled element vs Uncontrolled Click event earlier
-
+              
+              - value: whatever we assign to value the input will show
             */}
-            <input type="text" value={this.state.term} onChange={ (e) => this.setState({ term: e.target.value }) } />
+            <input 
+              type="text" 
+              value={this.state.term}
+              // change user input force toUpperCase()
+              // onChange={ (e) => this.setState({ term: e.target.value.toUpperCase() }) }
+              onChange={ (e) => this.setState({ term: e.target.value }) }
+            />
           </div>
 
         </form>

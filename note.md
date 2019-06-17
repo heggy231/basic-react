@@ -31349,11 +31349,14 @@ class SearchBar extends React.Component {
 
 export default SearchBar;
 
-- Whenever input field has a change > onChange prop get the value
-Other events:  when we pass function to onChange > it will be called automatically > when user interacts with your website.  
+- event handler event listener REACT Whenever input field has a change > onChange prop get the value few react based eventListner
+REACT events:  when we pass function to onChange > it will be called automatically > when user interacts with your website.  
+Note you can click on div but you can not change div but input works with onChange.
+Note onSubmit form can be submitted not div.
+
   1) onClick - User clicks on something  <a onClick={this.onUserClick}> </a>
-    when user clicks on the element, the cb function will be called.
-  2) onChange - User changes text in an input field <input onChange={this.onInputChange}/>
+    when user clicks on the element, the cb function will be called. 
+  2) onChange  (in js keydown) - User changes text in an input field <input onChange={this.onInputChange}/>
     onChange(event) {
       cons
     }
@@ -31362,6 +31365,7 @@ Other events:  when we pass function to onChange > it will be called automatical
     <input type="submit" />
   </form>
 
+Naming convention: on Input (which element?) Change (what event are we watching for?)
 
 - refactor of event handler function (single line of code arrow function):
 
@@ -31381,7 +31385,11 @@ option2)
  We react dev pref Controlled components
 
 Uncontrolled Click event --> refactor to --> controlled element
-
+  Flow 1. User Types in input
+  Flow 2. Callback gets invoked
+  Flow 3. We call setState with the new value
+  Flow 4. Component rerenders
+  Flow 5. Input is told what its value is (coming from state)
 
 - where to put javascript tag js tag html
 https://stackoverflow.com/questions/143486/unobtrusive-javascript-script-at-the-top-or-the-bottom-of-the-html-code
@@ -31434,3 +31442,69 @@ https://codepen.io/heggy231/pen/KjdoJX?editors=1000
 
 - React only Input value change: (https://codepen.io/heggy231/pen/ewJzYg)
 
+What is controlled vs. uncontrolled: key difference: 
+
+When uncontrolled:
+  Q) What's the value of the input right now?
+HTML World: 
+  <input value="hi there" /> 
+  // only thru DOM > document.getElementsByTagName('tag_name')[whole_number].value
+vs
+React World: React has no idea what value for user input.  We don't like to store 
+  input value inside of HTML element.  
+
+
+  Where you used to assign:
+  class SearchBar extends React.Component {
+    onInputChange() {
+      console.log("input was clicked!")
+    }
+
+    render() {
+      <input 
+        type="text" 
+        value={this.state.term} 
+        onChange={this.onInputChange} 
+      />
+    }
+
+  
+
+  * Refactor to make it controlled (https://codepen.io/heggy231/pen/gNMMNJ?editors=1000)
+  1) add the state
+  2) <input value={this.state.term}
+            onChange={ (e) => this.setState( 
+              {term: e.target.value}
+            )}
+     />
+
+* React World
+State -> { term: 'hi there' }
+
+* DOM World
+<input value={go look at state to get current value} />
+
+- once controlled you don't have to look at the DOM to see the value of the input.  but 
+state has the value.
+The reason of this and that we are driving and store all of the data. Not HTML input element.
+
+  <input 
+    type="text" 
+    value={this.state.term} 
+    onChange={ (e) => this.setState({ term: e.target.value }) }
+  />
+
+- Force user to only input upper case character
+state = {
+  term: 'enter your question',
+}
+
+render() {
+  return (
+    <input
+      type="text"
+      value={this.state.term}
+      onChange={ (e) => this.setState({ term: e.target.value.toUpperCase() }) }
+    />
+  )
+}
