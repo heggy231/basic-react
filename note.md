@@ -31846,3 +31846,55 @@ class SearchBar extends React.Component {
 }
 
 export default SearchBar;
+
+
+- Search term back upto the app component
+
+Using Unsplash API:
+- https://unsplash.com/documentation#search-photos
+
+- 2 libraries for managing network requests and fetching some amount of data:
+1) Axios (3rd party package)
+  stand alone 3rd party package npm to install into a react project
+2) Fetch (function built into modern browsers)
+  built into all modern browser
+  it will produce smaller in size since no package needs to be installed
+  but it is more basic therefore you have to write more code.
+
+- install axios (react pop networkwork request): npm install --save axios
+import React from 'react';
+import axios from 'axios'; // we put third party package above our file
+import SearchBar from './SearchBar';
+- axios react documentation: https://github.com/axios/axios
+// Make a request for a user with a given ID
+axios.get('/user?ID=12345') // get a endpoint for our api
+
+- unsplash Schema > Location: (https://unsplash.com/documentation#location)
+root of unsplash
+`https://api.unsplash.com/`
+
+- Search Photos endpoint: (https://unsplash.com/documentation#search-photos)
+`GET /search/photos`
+
+- Public Actions: (https://unsplash.com/documentation#public-actions)
+https://unsplash.com/documentation#public-actions
+1) Header approach:
+Authorization: Client-ID YOUR_ACCESS_KEY
+
+2) pass a value using a client_id query parameter:
+https://api.unsplash.com/photos/?client_id=YOUR_ACCESS_KEY
+- under axios header request config obj
+(https://github.com/axios/axios#request-config)
+  // `headers` are custom headers to be sent
+  headers: {'X-Requested-With': 'XMLHttpRequest'},
+  for Unsplash
+  To authenticate requests in this way, pass your application’s access key via the HTTP Authorization header:
+  // unsplash expects Authorization in the header and its Client-ID with access key value in string
+  Authorization: Client-ID YOUR_ACCESS_KEY
+
+
+  // `params` are the URL parameters to be sent with the request
+  // Must be a plain object or a URLSearchParams object
+  params: {
+    ID: 12345
+  },
