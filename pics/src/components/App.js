@@ -20,9 +20,10 @@ class App extends React.Component {
       }
     // after asynch axios network request promise obj get passed, arrow function is cb invoked with data we got back splash api
     }).then((response) => {
-      debugger;
+      // debugger;
       // console.log(response);
-      console.log(response.data.results);
+      // URL Regular for its path
+      console.log(response.data.results[0].urls.regular);
     });
   }
   render() {
