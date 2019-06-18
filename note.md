@@ -31898,3 +31898,261 @@ https://api.unsplash.com/photos/?client_id=YOUR_ACCESS_KEY
   params: {
     ID: 12345
   },
+
+
+- just using axios call:
+class App extends React.Component {
+  onSearchSubmit(term) {
+    // api end point url and config optional argument
+    axios
+      .get('https://api.unsplash.com/search/photos', {
+        // https://unsplash.com/documentation#parameters-11
+        // what happens with params adds to the end of url https://api.unsplash.com/search/photos?yourQueryTermValue  ex) https://api.unsplash.com/search/photos?car
+        // Request Config for Axios https://github.com/axios/axios#request-config
+        params: { query: term },
+        // header doc https://unsplash.com/documentation#public-actions
+        headers: {
+        //Authorization: Client-ID YOUR_ACCESS_KEY
+          Authorization: 'Client-ID c60a2d465519232c93936ce432ae69a1d052aa60ee8dc5b01a22919ef699590c'
+        }
+    // after asynch axios network request promise obj get passed, arrow function is cb invoked with data we got back splash app
+    })
+    .then(response => {
+      console.log(response.data.results);
+    });
+    
+  }
+  render() {
+    return (
+      <div className="ui container" style={{ marginTop: '10px' }}>
+        <SearchBar onSubmit={this.onSearchSubmit}/>
+      </div>
+    );
+  }
+}
+
+- Using async with axios: By putting `async` infront of function name; we can use await request infront of network request axios.
+
+class App extends React.Component {
+  async onSearchSubmit(term) {
+    const response = await axios
+      .get('https://api.unsplash.com/search/photos', {
+        headers: {
+          Authorization: 'Client-ID c60a2d465519232c93936ce432ae69a1d052aa60ee8dc5b01a22919ef699590c'
+        }
+      });
+    console.log(response.data.results);
+  }
+  render() {
+    return (
+      <div className="ui container" style={{ marginTop: '10px' }}>
+        <SearchBar onSubmit={this.onSearchSubmit}/>
+      </div>
+    );
+  }
+}
+
+export default App;
+
+- error in this  when passing props from parent app to child
+
+* App.js)
+class App extends React.Component {
+  // if expected to img in array default it empty array
+  state = { images: [] };
+  async onSearchSubmit(term) {
+    // api end point url and config optional argument
+    // await key word for anything that may makes network request
+    const response = await axios
+      .get('https://api.unsplash.com/search/photos', {
+        params: { query: term },
+        headers: {
+          Authorization: 'Client-ID c60a2d465519232c93936ce432ae69a1d052aa60ee8dc5b01a22919ef699590c'
+        }
+      });
+    // console.log(response.data.results);
+    console.log(this);
+    this.setState({ images: response.data.results });
+  }
+  render() {
+return (
+      <div className="ui container" style={{ marginTop: '10px' }}>
+      // here we are passing down prop down to SearchBar component
+        <SearchBar 
+          onSubmit={this.onSearchSubmit}
+          guessWhtIam="Im the props objt!!"
+        />
+        Found: {this.state.images.length}
+      </div>
+
+* SearchBar.js)
+class SearchBar extends React.Component {
+  // control vs uncontrolled using state makes it control
+  state = {
+    // since state is controlling the data we can set the 
+    //  initialization value.
+    term: '',
+  };
+  /* regular method
+  onFormSubmit(event) {
+    // stop form from submit (browser's default behavior)
+    event.preventDefault();
+    console.log(this.state.term);
+  }
+  */
+
+  // Assign arrow function which auto sets `this` points to SearchBar
+  onFormSubmit = (event) => {
+    // stop form from submit (browser's default behavior)
+    event.preventDefault();
+    this.props.onSubmit(this.state.term);  // 
+  }
+
+- convert regular funtion to arrow function to bind this keyword
+  - before)
+  async onSearchSubmit(term) {
+    // api end point url and config optional argument
+    // await key word for anything that may makes network request
+    const response = await axios
+      .get('https://api.unsplash.com/search/photos', {
+        params: { query: term },
+        headers: {
+          Authorization: 'Client-ID c60a2d465519232c93936ce432ae69a1d052aa60ee8dc5b01a22919ef699590c'
+        }
+      });
+    // console.log(response.data.results);
+    console.log(this);
+    this.setState({ images: response.data.results });
+  }
+  - after) move the async the other side of equal.
+  // async onSearchSubmit(term) {
+  onSearchSubmit = async (term) => {
+    // api end point url and config optional argument
+    // await key word for anything that may makes network request
+    const response = await axios
+      .get('https://api.unsplash.com/search/photos', {
+        params: { query: term },
+        headers: {
+          Authorization: 'Client-ID c60a2d465519232c93936ce432ae69a1d052aa60ee8dc5b01a22919ef699590c'
+        }
+      });
+    console.log(response.data.results);
+    this.setState({ images: response.data.results });
+  }
+
+
+- create axios class custom:
+
+import axios from 'axios';
+
+// create a new instance of axios with a custom config https://www.npmjs.com/package/axios#axioscreateconfig
+axios.create({
+  headers: {
+    baseURL: "https://api.unsplash.com/",
+    Authorization: 'Client-ID c60a2d465519232c93936ce432ae69a1d052aa60ee8dc5b01a22919ef699590c'
+  }
+});
+
+- passing down props App.js into ImageList.js:
+* App.js)
+import ImageList from './ImageList';
+
+class App extends React.Component {
+  state = { images: [] };
+
+  render() {
+    return (
+      <div>
+        <ImageList images={this.state.images} />
+      </div>
+    )
+  }
+}
+
+export default App;
+
+* ImageList.js:
+import React from 'react';
+
+const ImageList = (props) => {
+  console.log(props.images); 
+  // props.images => [ ] empty array; since it's getting the parent component from App (its parent container)
+
+  return <div>Image List!</div>
+}
+
+------
+### Array.map review
+[1, 2, 7].map(function(num) {
+	return num * 10;
+});
+// =>  [10, 20, 70]
+each element of array gets transforms into new things and returns a brand new array.
+
+- silly but this is also possible with Array
+[1, 2, 7].map(function(num) {
+	return true;
+});
+
+* another of map ex: (leave the original numbers alone but newNumber gets new transformed number)
+const numbers = [0, 1, 2, 3, 4];
+let newNumbers = [];
+
+for (let i = 0; i < numbers.length; i++) {
+	newNumbers.push(numbers[i] * 10);
+}
+
+newNumbers; // [0,10,20,30,40]
+
+numbers.map((eachNum) => {
+	return eachNum * 10;
+});
+(5) [0, 10, 20, 30, 40]
+
+- since this is single return stmt:
+numbers.map((eachNum) => eachNum * 10);
+  - OR -
+numbers.map(eachNum => eachNum * 10);
+
+- for our pic app we are doing this:
+const numbers = [0, 1, 2, 3];
+numbers.map(num => <div>{num}</div>)
+
+*** our pics app ex) ***
+const ImageList = props => {
+  return <div>ImageList</div>;
+};
+
+
+*** what response obj gives you
+response > data > results > urls > 
+
+*** each Child should have unique "key" prop Warning message how to fix and what is that mean?
+
+index.js:1375 Warning: Each child in a list should have a unique "key" prop.
+
+Check the render method of `ImageList`. See https://fb.me/react-warning-keys for more information.
+    in img (at ImageList.js:6)
+    in ImageList (at App.js:28)
+    in div (at App.js:22)
+    in App (at src/index.js:6)
+
+- It is best to keep the key=value when rendering element in the DOM using React.
+  * when we get element from api calls > we usu get id element
+
+  * We need to assign the key={image.id} to the root elment that we are returning from a list of records.
+
+  const images = props.images.map(image => {
+    return ( // here div is the root element
+      <div key={image.id}>
+        <img src={image.urls.regular}>
+      </div>
+    )
+  });
+
+  * option 2 to add key ID)
+
+  const images = props.images.map(image => {
+    // here image is response.data.results which is an array
+    return <img key={image.id} src={image.urls.regular} />
+  });

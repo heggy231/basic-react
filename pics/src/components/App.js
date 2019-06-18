@@ -1,33 +1,31 @@
 import React from 'react';
-import axios from 'axios';
+import unsplash from '../api/unsplash';
 import SearchBar from './SearchBar';
+import ImageList from './ImageList';
 
-
-// functional const App = () => { return <div> }
-// class based component
 class App extends React.Component {
-  async onSearchSubmit(term) {
-    // api end point url and config optional argument
-    // await key word for anything that may makes network request
-    const response = await axios
-      .get('https://api.unsplash.com/search/photos', {
-        // https://unsplash.com/documentation#parameters-11
-        // what happens with params adds to the end of url https://api.unsplash.com/search/photos?yourQueryTermValue  ex) https://api.unsplash.com/search/photos?car
-        // Request Config for Axios https://github.com/axios/axios#request-config
+  // if expected to img in array default it empty array
+  state = { images: [] };
+  onSearchSubmit = async (term) => {
+    const response = await unsplash
+      .get('/search/photos', {
         params: { query: term },
-        // header doc https://unsplash.com/documentation#public-actions
-        headers: {
-        //Authorization: Client-ID YOUR_ACCESS_KEY
-          Authorization: 'Client-ID c60a2d465519232c93936ce432ae69a1d052aa60ee8dc5b01a22919ef699590c'
-        }
-      // after asynch axios network request promise obj get passed, arrow function is cb invoked with data we got back splash app
-      });
-    console.log(response.data.results);
+    });
+    // console.log(response.data.results);
+    // console.log("this keyword", this); // this keyword should now point to App class
+    // console.log("this: ", this);
+    console.log("response: ", response);
+    this.setState({ images: response.data.results });
   }
   render() {
     return (
       <div className="ui container" style={{ marginTop: '10px' }}>
-        <SearchBar onSubmit={this.onSearchSubmit}/>
+        <SearchBar 
+          onSubmit={this.onSearchSubmit}
+        />
+        {/* Found: {this.state.images.length} */}
+        {/* passing down images prop to child imageList */}
+        <ImageList images={this.state.images}/>
       </div>
     );
   }
