@@ -1,12 +1,27 @@
 import React from 'react';
 
+// class based component
 class SearchBar extends React.Component {
   // control vs uncontrolled using state makes it control
   state = {
     // since state is controlling the data we can set the 
     //  initialization value.
-    term: 'Enter your question',
+    term: '',
   };
+  /* regular method
+  onFormSubmit(event) {
+    // stop form from submit (browser's default behavior)
+    event.preventDefault();
+    console.log(this.state.term);
+  }
+  */
+
+  // Assign arrow function which auto sets `this` points to SearchBar
+  onFormSubmit = (event) => {
+    // stop form from submit (browser's default behavior)
+    event.preventDefault();
+    this.props.onSubmit(this.state.term);
+  }
 
   // onInputClick() {
   //   console.log("Input was clicked!")
@@ -17,7 +32,7 @@ class SearchBar extends React.Component {
   render() {
     return (
       <div className="ui segment">    
-        <form className="ui form">
+        <form onSubmit={this.onFormSubmit} className="ui form">
           <div className="field">
             {/* label for the image search: Image Search */}
             <label>Image Search</label>
@@ -31,14 +46,14 @@ class SearchBar extends React.Component {
               - value: whatever we assign to value the input will show
             */}
             <input 
-              type="text" 
+              type="text"
+              placeholder="enter something"
               value={this.state.term}
               // change user input force toUpperCase()
               // onChange={ (e) => this.setState({ term: e.target.value.toUpperCase() }) }
               onChange={ (e) => this.setState({ term: e.target.value }) }
             />
           </div>
-
         </form>
       </div>
     );

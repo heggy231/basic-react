@@ -31508,3 +31508,341 @@ render() {
     />
   )
 }
+
+- Some other use cases for controlled components are good for: 1) radio buttons 2) check boxes 3) form inputs
+* app.js)
+import React from 'react';
+import SearchBar from './SearchBar';
+
+// functional component
+const App = () => {
+  return (
+    <div className="ui container" style={{ marginTop: '10px' }}>
+      <SearchBar />
+    </div>
+  );
+};
+
+export default App;
+
+
+* SearchBar.js)
+import React from 'react';
+
+class SearchBar extends React.Component {
+  // control vs uncontrolled using state makes it control
+  state = {
+    // since state is controlling the data we can set the 
+    //  initialization value.
+    term: 'Enter your question',
+  };
+
+  // onInputClick() {
+  //   console.log("Input was clicked!")
+  // }
+  //  REMEMBER to add onClick={ this.onInputClick} 
+  //   inside of input tag to get this function working
+
+  render() {
+    return (
+      <div className="ui segment">    
+        <form className="ui form">
+          <div className="field">
+            {/* label for the image search: Image Search */}
+            <label>Image Search</label>
+            {/* when refer to this.onInputChange remember to leave out () 
+              We do mpt put () >> when we pass a callback function to an event handler
+              - call .onInputChange() when user types anything on field which event.target.value get the info.
+
+              - onChange: different events has different prop names, this case prop name: onChange
+              - refactoring to controlled element vs Uncontrolled Click event earlier
+              
+              - value: whatever we assign to value the input will show
+            */}
+            <input 
+              type="text" 
+              value={this.state.term}
+              // change user input force toUpperCase()
+              // onChange={ (e) => this.setState({ term: e.target.value.toUpperCase() }) }
+              onChange={ (e) => this.setState({ term: e.target.value }) }
+            />
+          </div>
+
+        </form>
+      </div>
+    );
+  }
+}
+
+export default SearchBar;
+
+- my addition:
+<input 
+  type="text"
+  placeholder="enter something"
+  value={this.state.term}
+  // change user input force toUpperCase()
+  // onChange={ (e) => this.setState({ term: e.target.value.toUpperCase() }) }
+  onChange={ (e) => this.setState({ term: e.target.value }) }
+/>
+
+- What is `this` used for in a class?  How is the value of `this` determined in a function?
+class SearchBar extends React.Component {
+  state= {}
+
+  onFormSubmit() {}
+
+  render(){}
+}
+
+Instance of `SearchBar`:
+  state
+  render
+  onFormSubmit
+
+  this // give me the instance of SearchBar > which gives me access to state, render, onFormSubmit
+
+- learning about this gets called inside of  https://stephengrider.github.io/playgrounds/
+class SearchBar extends React.Component {
+  state = {
+    term: '',
+  };
+
+  onFormSubmit(event) {
+    event.preventDefault();
+    console.log(this.state.term);
+  }
+
+- Play to understand this:
+class Car {
+	setDriveSound(sound) {
+  	this.sound = sound;
+  }
+  
+  drive() {
+  	return this.sound;
+  }
+}
+
+- Note about constructor function using this.
+// create a Person Constructor function
+function Person(name) {
+    // name - Heggy
+    // species - Human
+​
+    this.name = name;
+    this.species = 'human';
+}
+
+* next interation of this inside of constructor:
+function Person(name) {
+    // name - Heggy
+    // species - Human
+​   
+    // this = {}; this is empty obj
+    this.name = name;
+    this.species = 'human';
+    // at the end it will return this;
+}
+
+// to get ^^^above to work only in conjunction with new Keyword
+new Person('Heggy')
+* output => Person {name: "Heggy", species: "human"}
+if you forget to put new keyword the this.name will be assigned to Window obj
+
+
+-- next using constructor new keyword inside of class Car
+class Car {
+	setDriveSound(sound) {
+  	this.sound = sound;
+  }
+  
+  drive() {
+  	return this.sound;
+  }
+}
+
+// constructor function use key `new`.  shortcut to use obj
+const car = new Car();
+car.setDriveSound('vroom');
+car.drive(); // if you want to see where this is getting set is left of the dot rule when the function is called.  so this is car obj since drive() was called on car.
+=> "vroom"
+
+const drive = car.drive;
+drive()
+=> VM1638:7 Uncaught TypeError: Cannot read property 'sound' of undefined
+    at drive (<anonymous>:7:16)
+    at <anonymous>:1:1
+
+// when drive is called, it has nothing left of the the dot; therefore it is set to undefined.
+
+when class is not extneding anything we don't have to write super.
+class Car {
+  constructor() {
+    this.drive = this.drive.bind(this)
+  }
+
+
+}
+
+- way to fix
+class Car {
+  constructor() {
+  	this.drive = this.drive.bind(this);
+  }
+	setDriveSound(sound) {
+  	this.sound = sound;
+  }
+  
+  drive() {
+  	return this.sound;
+  }
+}
+
+// constructor function use key `new`.  shortcut to use obj
+const car = new Car();
+car.setDriveSound('vroom');
+car.drive();
+
+// => vroom
+
+const truck = {
+	sound: 'putputput',
+  driveMyTruck: car.drive
+}
+truck.driveMyTruck();
+// => 'putputput' left of the dot car.drive => 
+//    this.sound => truck.sound => 'putputput'
+
+const drive = car.drive;
+drive();
+// => there is nothing left of dot for x.drive() here!
+
+* bind into the .bind once it is bind it is forever bound
+
+class SearchBar extends React.Component {
+  // control vs uncontrolled using state makes it control
+  state = {
+    // since state is controlling the data we can set the 
+    //  initialization value.
+    term: '',
+  };
+
+onFormSubmit(event) {
+    event.preventDefault();
+    console.log(this.state.term);
+}
+
+- is same as)
+
+class SearchBar extends React.Component {
+  // control vs uncontrolled using state makes it control
+  state = {
+    // since state is controlling the data we can set the 
+    //  initialization value.
+    term: '',
+  };
+
+onFormSubmit: function(event) {
+    event.preventDefault();
+    console.log(this.state.term);
+}
+
+- Now we turn it into an arrow function to keep the this to, We are now assigning an arrow
+  function)
+
+class SearchBar extends React.Component {
+  // control vs uncontrolled using state makes it control
+  state = {
+    // since state is controlling the data we can set the 
+    //  initialization value.
+    term: '',
+  };
+
+// Assign arrow function which auto sets this points to SearchBar this is now  
+//  instance of SearchBar
+onFormSubmit = (event) => {
+    event.preventDefault();
+    console.log(this.state.term);
+}
+
+- 3rd way to fix the this binding (call the arrow function within the form
+)
+
+- before)
+<form onSubmit={this.onFormSubmit} className="ui form">
+
+- after pass in arrow function and event obj) 
+leave onFormSubmit method alone:
+
+  onFormSubmit(event) {
+    // stop form from submit (browser's default behavior)
+    event.preventDefault();
+    console.log(this.state.term);
+  }
+
+<form onSubmit={(event) => this.onFormSubmit(event)} className="ui form">
+
+--- fixed with arrow function onFormSubmit()
+import React from 'react';
+
+class SearchBar extends React.Component {
+  // control vs uncontrolled using state makes it control
+  state = {
+    // since state is controlling the data we can set the 
+    //  initialization value.
+    term: '',
+  };
+  /* regular method
+  onFormSubmit(event) {
+    // stop form from submit (browser's default behavior)
+    event.preventDefault();
+    console.log(this.state.term);
+  }
+  */
+
+  // Assign arrow function which auto sets `this` points to SearchBar
+  onFormSubmit = (event) => {
+    // stop form from submit (browser's default behavior)
+    event.preventDefault();
+    console.log(this.state.term);
+  }
+
+  // onInputClick() {
+  //   console.log("Input was clicked!")
+  // }
+  //  REMEMBER to add onClick={ this.onInputClick} 
+  //   inside of input tag to get this function working
+
+  render() {
+    return (
+      <div className="ui segment">    
+        <form onSubmit={this.onFormSubmit} className="ui form">
+          <div className="field">
+            {/* label for the image search: Image Search */}
+            <label>Image Search</label>
+            {/* when refer to this.onInputChange remember to leave out () 
+              We do mpt put () >> when we pass a callback function to an event handler
+              - call .onInputChange() when user types anything on field which event.target.value get the info.
+
+              - onChange: different events has different prop names, this case prop name: onChange
+              - refactoring to controlled element vs Uncontrolled Click event earlier
+              
+              - value: whatever we assign to value the input will show
+            */}
+            <input 
+              type="text"
+              placeholder="enter something"
+              value={this.state.term}
+              // change user input force toUpperCase()
+              // onChange={ (e) => this.setState({ term: e.target.value.toUpperCase() }) }
+              onChange={ (e) => this.setState({ term: e.target.value }) }
+            />
+          </div>
+        </form>
+      </div>
+    );
+  }
+}
+
+export default SearchBar;
