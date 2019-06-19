@@ -32240,3 +32240,56 @@ export default ImageList;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 10px;
 }
+
+- row tallness for grid
+.image-list {
+  display: grid;
+  /* 1fr (max allocation of space) where all col is equal width, minMax (250px, 1fr) each column at minimum 250px wide, 1fr max allocation of space  */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 10px;
+  /* how tall each cell grid-auto-rows */
+  grid-auto-rows: 150px;
+}
+
+.image-list img {
+  width: 250px;
+}
+
+- grid-auto-rows tallness of the cell
+
+- grid-row-end: span 3 (image given 3 cells to display in a rows of tree: 3 cells down)
+
+  ex) .image-list img { // every image will span down 3 
+  width: 250px;
+  grid-row-end: span 3;
+}
+
+- example of destructuring (gist demo: https://github.gapinc.com/gist/hcastan/31cfcc81946efacea2f2bf85004f15cf)
+//  Note we are referring to this.props.image over and over
+//   this is great opportunity to destructure.
+
+// any properties you were going to name in the obj put it inside of left side.  here we are assigning .image obj with properties description and .image obj with properties urls
+
+ class ImageCard extends React.Component {
+  render () {
+    const { description, urls } = this.props.image;
+
+    return (
+      <div>
+        <img 
+          alt={this.props.image.description}
+          src={this.props.image.urls.regular}
+        />
+      </div>
+    );
+  }
+}
+
+const this.props = {
+  image: {
+    description: 'cat looking up',
+    urls : {
+      regular: 'https://google.com/cat',
+    }
+  }
+}
