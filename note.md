@@ -32231,3 +32231,12 @@ const ImageList = (props) => {
 };
 
 export default ImageList;
+
+- grid system css: grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+.image-list {
+  display: grid;
+  /* 1fr (max allocation of space) where all col is equal width, minMax (250px, 1fr) each column at minimum 250px wide, 1fr max allocation of space  */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 10px;
+}
