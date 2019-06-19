@@ -32293,3 +32293,241 @@ const this.props = {
     }
   }
 }
+
+var seasonConfig = {
+  summer: {
+    text: 'Lets hit the beach',
+    iconName: 'sun'
+  },
+  winter: {
+    text: 'Burr it is cold!',
+    iconName: 'snowflake'
+  }
+}
+
+// ES6 supports destructuring: you can create a variable with the same name as an equivalent object property. For example:  https://www.sitepoint.com/es6-enhanced-object-literals/
+var { text, iconName } = seasonConfig["summer"];
+// => text => "Lets hit the beach", iconName => "sun"
+text
+iconName
+
+//=================================================================================================
+// ES5 explicit extract a property value from an obj into another variable
+
+var seasonConfig = {
+  summer: {
+    text: 'Lets hit the beach',
+    iconName: 'sun'
+  },
+  winter: {
+    text: 'Burr it is cold!',
+    iconName: 'snowflake'
+  }
+}
+
+var text = seasonConfig.summer.text; // 'Lets hit the beach'
+// or
+var text = seasonConfig["summer"]["text"]; // 'Lets hit the beach'
+
+// demo of destructuring: https://codepen.io/heggy231/pen/mZboZX?editors=0010
+########
+const ImageList = (props) => {
+  const images = props.images.map((image) => {
+    // note: image = response.data.result
+    return <img 
+    key={image.id} 
+    src={image.urls.regular} 
+    alt={image.description} />
+  });
+
+  return <div>{images}</div>;
+};
+
+export default ImageList;
+
+- image are being repeated 3 times. let's use destructuring. destructuring destructure example es6
+
+before:
+  const images = props.images.map((image) => {
+    return 
+    <img 
+    key={image.id} 
+    src={image.urls.regular} 
+    alt={image.description} 
+    />
+  });
+
+after: // 1. remove image and insert {} with property
+  const images = props.images.map(({ 
+    id, 
+    urls, 
+    description 
+  }) => { // 2. delete anywhere you see `image.`
+    return 
+    <img 
+    key={id}  // used to be key={image.id} 
+    src={urls.regular} // used to be src={image.urls.regular} 
+    alt={description} // used to be alt={image.description}
+    />
+  });
+    
+ ++++++++++++++++++++++++
+//  Note we are ref
+ class ImageCard extends React.Component {
+  render () {
+    const { description, urls } = this.props.image;
+
+    return (
+      <div>
+        <img 
+          alt={this.props.image.description}
+          src={this.props.image.urls.regular}
+        />
+      </div>
+    );
+  }
+}
+
+- example of destructuring
+//  Note we are referring to this.props.image over and over
+//   this is great opportunity to destructure.
+
+// any properties you were going to name in the obj put it inside of left side.  here we are assigning .image obj with properties description and .image obj with properties urls
+
+ class ImageCard extends React.Component {
+  render () {
+    const { description, urls } = this.props.image;
+
+    return (
+      <div>
+        <img 
+          alt={this.props.image.description}
+          src={this.props.image.urls.regular}
+        />
+      </div>
+    );
+  }
+}
+
+const this.props = {
+  image: {
+    description: 'cat looking up',
+    urls : {
+      regular: 'https://google.com/cat',
+    }
+  }
+}
+
+------------
+** Next iteration:
+1) Let the ImageCard render itself and its image.
+2) Reach into the DOM and figure out the height of the image
+3) Set the image height on state to get the component to rerender
+4) When rerendering, assign a 'grid-row-end' to make sure the image takes up the appropriate space.
+
+
+- vanilla JS to get height of image of render img
+> document.querySelectorAll('img')[0].height // 321 px
+or
+> document.querySelector('img').clientHeight
+
+- when you want to get access to DOM using React we use: ref system!
+
+* React Refs - a system 
+1) gives access to a single DOM Element.
+2) We create refs in the constructor, assign them to instance variables, then pass to a particular JSX elements as props
+
+Here is ex how we react to have access to the DOM like JSX element
+1) set constructor with super props
+  class ImageCard extends React.Component {
+    constructor(props) {
+      super(props);
+
+      this.imageRef = React.createRef();
+    }
+
+2) reference inside of render method return <img> JSX element which gives you some properties of the img jsx using ref
+
+  render () {
+    const { description, urls } = this.props.image;
+
+    return (
+      <div>
+        <img
+          ref={this.imageRef} // ref to DOM like JSX element
+          alt={description}
+          src={urls.regular}
+        />
+      </div>
+    );
+  }
+- example of Image Card to view what imageRef gives you
+import React from 'react';
+import ImageList from './ImageList';
+
+class ImageCard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.imageRef = React.createRef();
+  }
+
+  componentDidMount() {
+    console.log(this.imageRef);
+    console.log('ref height', this.imageRef.current.height)
+    ;  // => `ref height 212`
+  }
+
+  render () {
+    const { description, urls } = this.props.image;
+
+    return (
+      <div>
+        <img
+          // react's reference to DOM
+          ref={this.imageRef}
+          alt={description}
+          src={urls.regular}
+        />
+      </div>
+    );
+  }
+}
+
+export default ImageCard;
+
+- how to make sure your image is loaded on react Dom
+
+class ImageCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.imageRef = React.createRef();
+  }
+  componentDidMount() {
+    this.imageRef.current.addEventListener('load', this.setSpans);
+  }
+
+<!-- grid-row-end: span 3; we are trying to update this -->
+componentDidMount() {
+    // console.log(this.imageRef);
+    // console.log('ref height', this.imageRef.current.height);
+    // console.log('ref clientHeight', this.imageRef.current.clientHeight);
+    
+    // makes sure image height has the chance to load to web browser and this.setSpans callback function invoked
+    this.imageRef.current.addEventListener('load', this.setSpans);
+  }
+
+  setSpans = () => {
+    // get the correct height of this image
+    console.log(this.imageRef.current.clientHeight);
+  }
+- understanding spans calculation Math.height
+  setSpans = () => {
+    // get the correct height of this image
+    // console.log(this.imageRef.current.clientHeight);
+    const height = this.imageRef.current.clientHeight;
+    // Math.ceil: cap its value, 150px is row height, adding 1 for any decimal leftover value to get the full number  ex) if you have 320height Imag/ 150 row height
+    // => 2.13 + 1 = 3.13 and do a ceil will bring the span to next level up.  Math.ceil(3.13) => 4 rounding up
+    const spans = Math.ceil(height / 150);
+
+  }
