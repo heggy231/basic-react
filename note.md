@@ -32199,3 +32199,35 @@ after: // 1. remove image and insert {} with property
     alt={description} // used to be alt={image.description}
     />
   });
+
+  - how to import imagList.css to react
+  import './ImageList.css';
+
+  * to have images to show up 4 in the row:
+Grid (https://alligator.io/css/css-grid-layout-fr-unit/)
+
+* Inside of ImageList.css) 
+ .image-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.image-list img {
+  width: 250px;
+}
+
+* ImageList.js)
+import './ImageList.css';
+import React from 'react';
+
+
+const ImageList = (props) => {
+  const images = props.images.map(({ id, urls, description }) => {
+    // note: image = response.data.result
+    return <img key={id} src={urls.regular} alt={description} />
+  });
+
+  return <div className="image-list">{images}</div>;
+};
+
+export default ImageList;
