@@ -32156,3 +32156,46 @@ Check the render method of `ImageList`. See https://fb.me/react-warning-keys for
     // here image is response.data.results which is an array
     return <img key={image.id} src={image.urls.regular} />
   });
+
+  - make it accessible:
+  import React from 'react';
+
+const ImageList = (props) => {
+  const images = props.images.map((image) => {
+    // note: image = response.data.result
+    return <img 
+    key={image.id} 
+    src={image.urls.regular} 
+    alt={image.description} />
+  });
+
+  return <div>{images}</div>;
+};
+
+export default ImageList;
+
+- image are being repeated 3 times. let's use destructuring. destructuring destructure example es6
+
+before:
+  const images = props.images.map((image) => {
+    return 
+    <img 
+    key={image.id} 
+    src={image.urls.regular} 
+    alt={image.description} 
+    />
+  });
+
+after: // 1. remove image and insert {} with property
+  const images = props.images.map(({ 
+    id, 
+    urls, 
+    description 
+  }) => { // 2. delete anywhere you see `image.`
+    return 
+    <img 
+    key={id}  // used to be key={image.id} 
+    src={urls.regular} // used to be src={image.urls.regular} 
+    alt={description} // used to be alt={image.description}
+    />
+  });
