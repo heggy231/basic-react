@@ -33278,4 +33278,302 @@ https://youtu.be/AWpVScp9z4s?t=65
 
     `x > y` # save, i.e. store, the output of x into the location defined by y
 
+q) We are introduced to the sort function here 5. Can we use sort for sorting input not separated by newlines?
+
+Answer)
+Though the function sort only works to sort input separated by newlines, just as we have been able to chain together simple command line functions to accomplish complex tasks, we can do the same to sort input not separated by newlines. In order to do this, we will need to replace the symbols separating the input we would like to sort by newlines. To accomplish this, we can use the sed command (which we also learn about in this section). For instance, if our input, in.txt, is separated by spaces instead of newlines, we can sort the file by
+
+```
+sed -e "s/ /\n/g" in.txt | sort
+```
+
+> grep -i Mount mountains.txt # case insensitive `-i`
+grep -i enables the command to be case insensitive. Here, grep searches for capital or lowercase strings that match Mount in mountains.txt.  grep stands for “global regular expression print”.  The above commands are a great way to get started with grep. If you are familiar with regular expressions, you can use regular expressions to search for patterns in files.
+
+
+> sed 's/snow/rain/' forests.txt 
+sed stands for “stream editor”. It accepts standard input and modifies it based on an expression, before displaying it as output data. It is similar to “find and replace”.
+
+Let’s look at the expression 's/snow/rain/':
+
+s: stands for “substitution”. it is always used when using sed for substitution.
+snow: the search string, the text to find.
+rain: the replacement string, the text to add in place.
+In this case, sed searches forests.txt for the word “snow” and replaces it with “rain.” Importantly, the above command will only replace the first instance of “snow” on a line.
+
+
+  ex) `$ sed 's/snow/rain/g' forests.txt `
+
+  _#g expression, meaning “global”. Here sed searches forests.txt for the word “snow” and replaces it with “rain”, globally. All instances of “snow” on a line will be turned to “rain”._
+
+Redirection reroutes standard input, standard output, and standard error.
+
+The common redirection commands are:
+
+> redirects standard output of a command to a file, overwriting previous content.
+>> redirects standard output of a command to a file, appending new content to old content.
+< redirects standard input to a command.
+| redirects standard output of a command to another command.
+A number of other commands are powerful when combined with redirection commands:
+
+sort: sorts lines of text alphabetically.
+uniq: filters duplicate, adjacent lines of text.
+grep: searches for a text pattern and outputs it.
+sed : searches for a text pattern, modifies it, and outputs it.
+
+#### command line text editor:
+Command line text editor called nano.
+
+In the terminal, type
+nano hello.txt 
+
+"Hello, I am nano." 
+** nano commands:
+> `Ctrl + O` (the letter, not the number) to save the file. This is the letter “O”, not the number zero.
+> `Ctrl + X` to exit nano.
+> `clear` to clear the terminal window
+The menu of keyboard commands at the bottom of the window allow us to save changes to hello.txt and exit nano. The ^ stands for the Ctrl key.
+Ctrl + O saves a file. ‘O’ stands for output.
+Ctrl + X exits the nano program. ‘X’ stands for exit.
+Ctrl + G opens a help menu.
+clear clears the terminal window, moving the command prompt to the top of the screen.
+
+> nano ~/.bash_profile // from current folder 
+The ~ represents the user’s home directory.
+The . indicates a hidden file.
+The name ~/.bash_profile is important, since this is how the command line recognizes the bash profile.
+
+$ nano ~/.bash_profile
+~/.bash_profile is the name of file used to store environment settings. It is commonly called the “bash profile”. When a session starts, it will load the contents of the bash profile before executing commands.
+- The text echo "Welcome, Jane Doe" creates a greeting in the bash profile, which is saved. It tells the command line to echo the string “Welcome, Jane Doe” when a terminal session begins.
+
+The command `source ~/.bash_profile` activates the changes in ~/.bash_profile for the current session. Instead of closing the terminal and needing to start a new session, source makes the changes available right away in the session we are in.
+
+Open ~/.bash_profile in nano.
+> nano ~/.bash_profile
+
+Ctrl + O saves a file
+> `Ctrl + O` (the letter, not the number) to save the file. This is the letter “O”, not the number zero.
+> `Ctrl + X` to exit nano.
+
+In ~/.bash_profile, beneath the greeting you created, type
+
+alias pd="pwd"
+Save the file. > `Ctrl + O`
+
+Press Enter to write the filename
+Exit nano. > `Ctrl + X`
+
+In the command line, use the source command to activate the changes in the current session.
+> source ~/.bash_profile # activate the changes in the current session
+> alias pd="pwd" # enter this inside of .bash_profile
+- Source to activate the changes to the bash profile for the current session.
+  > source ~/.bash_profile
+
+alias hy="history"
+alias ll="ls -la"
+
+hy is set as alias for the history command in the bash profile. The alias is then made available in the current session through source. By typing hy, the command line outputs a history of commands that were entered in the current session.
+
+By typing ll, the command line now outputs all contents and directories in long format, including all hidden files.
+
+- environment variables.
+
+Open ~/.bash_profile in nano.
+add
+>export USER="Jane Doe" 
+
+In terminal)
+> echo $USER
+This should return the value of the variable that you set.
+
+`PS1` is a variable that defines the makeup and style of the command prompt.
+
+export PS1=">> " sets the command prompt variable and exports the variable. Here we change the default command prompt from $ to >>.
+After using the source command, the command line displays the new command prompt.
+
+> echo $HOME 
+This returns the value of the HOME variable.
+$ echo $HOME 
+The HOME variable is an environment variable that displays the path of the home directory. Here by typing echo $HOME, the terminal displays the path /home/ccuser as output.
+
+You can customize the HOME variable if needed, but in most cases this is not necessary.
+
+PATH
+What happens when you type this command?
+
+$ echo $PATH
+
+/home/ccuser/.gem/ruby/2.0.0/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/bin
+PATH is an environment variable that stores a list of directories separated by a colon. Looking carefully, echo $PATH lists the following directories:
+
+/home/ccuser/.gem/ruby/2.0.0/bin
+/usr/local/sbin
+/usr/local/bin
+/usr/bin
+/usr/sbin
+/sbin
+/bin
+Each directory contains scripts for the command line to execute. The PATH variable simply lists which directories contain scripts.
+
+For example, many commands we’ve learned are scripts stored in the /bin directory.
+
+> env | grep PATH 
+env | grep PATH is a command that displays the value of a single environment variable. Here the standard output of env is “piped” to the grep command. grep searches for the value of the variable PATH and outputs it to the terminal.
+
+- The environment refers to the preferences and settings of the current user.
+
+The nano editor is a command line text editor used to configure the environment.
+
+~/.bash_profile is where environment settings are stored. You can edit this file with nano.
+
+environment variables are variables that can be used across commands and programs and hold information about the environment.
+
+export VARIABLE="Value" sets and exports an environment variable.
+USER is the name of the current user.
+PS1 is the command prompt.
+HOME is the home directory. It is usually not customized.
+PATH returns a colon separated list of file paths. It is customized in advanced cases.
+env returns a list of environment variables.
+
+Bash (or shell) scripting is a great way to automate repetitive tasks and can save you a ton of time as a developer. Bash scripts execute within a Bash shell interpreter terminal. Any command you can run in your terminal can be run in a Bash script. When you have a command or set of commands that you will be using frequently, consider writing a Bash script to perform it.
+
+There are some conventions to follow to ensure that your computer is able to find and execute your Bash scripts. The beginning of your script file should start with #!/bin/bash on its own line. This tells the computer which type of interpreter to use for the script. When saving the script file, it is good practice to place commonly used scripts in the ~/bin/ directory.
+
+The script files also need to have the “execute” permission to allow them to be run. To add this permission to a file with filename: script.sh use:
+
+chmod +x script.sh
+Your terminal runs a file every time it is opened to load its configuration. On Linux style shells, this is ~/.bashrc and on OSX, this is ~/.bash_profile. To ensure that scripts in ~/bin/ are available, you must add this directory to your PATH within your configuration file:
+
+PATH=~/bin:$PATH
+Now any scripts in the ~/bin directory can be run from anywhere by typing the filename.
+
+inside of script.sh)
+Add a line to the beginning of script.sh to specify that it should be run using bash
+#!/bin/bash
+
+
+- Run the script unix in the terminal.
+  > ./script.sh to run the script.
+
+Within bash scripts (or the terminal for that matter), variables are declared by setting the variable name equal to another value. For example, to set the variable greeting to “Hello”, you would use the following syntax:
+
+greeting="Hello"
+
+- Variables: phrase="Hello to you!"
+Within bash scripts (or the terminal for that matter), variables are declared by setting the variable name equal to another value. For example, to set the variable greeting to “Hello”, you would use the following syntax:
+
+> greeting="Hello"
+Note that there is no space between the variable name, the equals sign, or “Hello”.
+
+To access the value of a variable, we use the variable name prepended with a dollar sign ($). In the previous example, if we want to print the variable value to the screen, we use the following syntax:
+
+> echo $greeting
+
+Create a variable phrase on the line before the current echo statement. Set the phrase equal to the string “Hello to you!”.
+#!/bin/bash
+phrase="Hello to you!"
+echo "Hello Codecademy!"
+
+Remember to prepend a $ to access its value.
+Run the script in the terminal.
+> ./script.sh
+
+A complete conditional in a bash script uses the following syntax:
+
+```
+if [ $index -lt 5 ]
+then
+  echo $index
+else
+  echo 5
+fi
+```
+
+Here is the list of comparison operators for numbers you can use within bash scripts:
+
+Equal: -eq
+Not equal: -ne
+Less than or equal: -le
+Less than: -lt
+Greater than or equal: -ge
+Greater than: -gt
+Is null: -z
+
+When comparing strings, it is best practice to put the variable into quotes ("). This prevents errors if the variable is null or contains spaces. The common operators for comparing strings are:
+
+Equal: ==
+Not equal: !=
+For example, to compare if the variables foo and bar contain the same string:
+
+if [ "$foo" == "$bar"]
+
+We’ve added two different greetings and a variable to store how many times the user has been greeted before. If this variable is less than 1, we want to use first_greeting. Otherwise, we want to use later_greeting.
+
+Add a line setting up the if conditional. Use the -lt operator.
+
+#!/bin/bash
+first_greeting="Nice to meet you!"
+later_greeting="How are you?"
+greeting_occasion=1
+
+if [$greeting_occasion -lt 1]
+then
+	echo $first_greeting
+else
+	echo $later_greeting
+fi
+
+Run the script: ./script.sh
+
+Loops
+There are 3 different ways to loop within a bash script: for, while and until.
+
+A for loop is used to iterate through a list and execute an action at each step. For example, if we had a list of words stored in a variable paragraph, we could use the following syntax to print each one:
+
+for word in $paragraph
+do
+  echo $word
+done
+Note that word is being “defined” at the top of the for loop so there is no $ prepended. Remember that we prepend the $ when accessing the value of the variable. So, when accessing the variable within the do block, we use $word as usual.
+
+Within bash scripting until and while are very similar. while loops keep looping while the provided condition is true whereas until loops loop until the condition is true. Conditions are established the same way as they are within an if block, between square brackets. If we want to print the index variable as long as it is less than 5, we would use the following while loop:
+
+while [ $index -lt 5 ]
+do
+  echo $index
+  index=$((index + 1))
+done
+Note that arithmetic in bash scripting uses the $((...)) syntax and within the brackets the variable name is not prepended with a $.
+
+The same loop could also be written as an until loop as follows:
+
+until [ $index -eq 5 ]
+do
+  echo $index
+  index=$((index + 1))
+done
+
+- arithmetic in bash scripting uses the $((...))
+> greeting_occasion=$((greeting_occasion + 1))
+```
+#!/bin/bash
+first_greeting="Nice to meet you!"
+later_greeting="How are you?"
+greeting_occasion=0
+while [ $greeting_occasion -lt 3 ]
+do 
+  if [ $greeting_occasion -lt 1 ]
+  then
+    echo $first_greeting
+  else
+    echo $later_greeting
+  fi
+  greeting_occasion=$((greeting_occasion + 1))
+done
+```
+
+
+
+
 
