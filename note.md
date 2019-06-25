@@ -32531,3 +32531,751 @@ componentDidMount() {
     const spans = Math.ceil(height / 150);
 
   }
+Left off 6/18 - https://www.udemy.com/react-redux/learn/lecture/12531340#content
+
+### Hooks:
+https://www.udemy.com/react-redux/learn/lecture/12823345#content
+
+![classvsFunction](https://cdn.glitch.com/cb093bfd-142f-45b3-bdb4-52ff49e0a1c2%2FclassVsFunctionReact.png?v=1560966554397)
+
+![Hookwithfunction-Based](https://cdn.glitch.com/cb093bfd-142f-45b3-bdb4-52ff49e0a1c2%2Fhook.png?v=1560966555674)
+*** Class-Based Components:
+- State, Lifecycle Methods (Component Did Update, COmponent did mount, Componenet will unmount)
+  setState method
+
+* ex Class-Based Componenet)
+class ImageCard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { spans: 0 };
+    this.imageRef = React.createRef();
+  }
+
+  componentDidMount() {
+    // console.log(this.imageRef);
+    // console.log('ref height', this.imageRef.current.height);
+    // console.log('ref clientHeight', this.imageRef.current.clientHeight);
+
+    // makes sure image height has the chance to load to web browser and this.setSpans callback function invoked
+    this.imageRef.current.addEventListener('load', this.setSpans);
+  }
+
+  setSpans = () => {
+    // get the correct height of this image
+    // console.log(this.imageRef.current.clientHeight);
+    const height = this.imageRef.current.clientHeight;
+    // Math.ceil: cap its value, 150px is row height, adding 1 for any decimal leftover value to get the full number  ex) if you have 320height Imag/ 150 row height
+    // => 2.13 + 1 = 3.13 and do a ceil will bring the span to next level up.  Math.ceil(3.13) => 4 rounding up
+    const spans = Math.ceil(height / 10);
+
+    // this.setState({ spans: spans });
+    this.setState({ spans });
+  };
+
+  render () {
+    const { description, urls } = this.props.image;
+
+    return (
+      <div style={{ gridRowEnd: `span ${this.state.spans}` }}>
+        <img
+          // react's reference to DOM
+          ref={this.imageRef}
+          alt={description}
+          src={urls.regular}
+        />
+      </div>
+    );
+
+*** Function-Based Components:
+- Not Much!  functions that returns JSX
+
+* ex Function-Based Component)
+  import './ImageList.css';
+  import React from 'react';
+  import ImageCard from './ImageCard';
+
+
+const ImageList = (props) => {
+  const images = props.images.map((image) => {
+    // note: image = response.data.result
+    return <ImageCard key={image.id} image={image} />
+  });
+
+  return <div className="image-list">{images}</div>;
+};
+
+export default ImageList;
+
+- hook system: borrowing some of class-based components add-on to Function-Based Components
+  - Function-Based Componenets:
+  (Hooks> State, Lifecycle Methods)
+
+What is great about it that we can add state and lifecycle Methods to function-based components??
+  * Hook Makes it easy to share logic between components.
+![hook](https://cdn.glitch.com/cb093bfd-142f-45b3-bdb4-52ff49e0a1c2%2FreasonHookgood.png?v=1560966797679)
+
+- Hooks will allow code reuse
+
+- allow function based components to have component level States and lifecycle methods.
+  * Goal of hook system: add in reusable logic to our app
+  Show a very simple example of hooks and make sure you understand how to use hooks by themselves.
+
+- JSONPlaceholder (https://jsonplaceholder.typicode.com/)
+Fake Online REST API for Testing and Prototyping 
+* todo: https://jsonplaceholder.typicode.com/todos has title
+* posts: https://jsonplaceholder.typicode.com/posts
+
+- hook's main goal: reusable logic
+
+- how to run jekyll running jekyll:
+first time: 
+> jekyll new <name of your blog>
+> cd heggy_blog
+> bundle exec jekyll serve // run the first time you run
+> jekyll serve // second time you run
+
+site architecture:
+- most days _posts will get a new markdown file
+
+Front Matter: info about my blog post
+  They are wrap within --- 3 hypens
+---
+layout: post
+title:  "Welcome to Jekyll!"
+date:   2019-06-19 14:54:10 -0700
+categories: jekyll update
+---
+written using YML, JSON 
+key: value pair
+
+- To see your draft  as a preview
+create a _drafts 
+_posts > _drafts
+run: 
+ > jekryl serve --draft
+
+- how to create a page
+---
+layout: page
+title: About
+permalink: /about/
+---
+you can insert it anywhere inside of the page.
+- Categories changes the url
+---
+layout: post
+title:  "Jekyll is up and running"
+date:   2019-06-19 14:54:10 -0700
+categories: jekyll
+permalink: "/post1/"
+---
+this results in 
+http://localhost:4000/post1/
+
+You can also insert into a categories as a variable
+essentially when you enter :x, x becomes a variable 
+
+---
+layout: post
+title:  "Learn about Jekyll"
+date:   2019-06-18 14:54:50 -0700
+categories: jekyll day2 cat
+permalink: /:categories
+---
+=> http://localhost:4000/jekyll/day2/cat
+
+* Recommendation jekyll add extension:
+use the permalink for all of your blogs and page 
+this way we do'nt have to worry about breaking pg when change 
+is made to category.
+---
+layout: post
+title:  "Blogging with Jekyll"
+date:   2019-06-18 14:54:50 -0700
+categories: jekyll day2 cat
+permalink: /:categories/:year/:month/:day/:title.html
+---
+=> http://localhost:4000/jekyll/day2/cat/2019/06/18/blogging-with-jekyll.html
+
+- What is Front Matter Defaults and what it eliminate layout?
+---
+title:  "Front Matter Defaults"
+date:   2019-06-19 14:54:10 -0700
+categories: front-matter
+permalink: "/:categories/"
+---
+
+Content always needs to have Front Matter set to `layout:post`
+What if we set a default?
+
+inside of config.yml > # Build settings)
+  defaults:
+    -
+      scope:
+        path: "projects" // only apply to scope > path
+      values:
+          layout: "post"
+  
+    - restart your jekyll server  (ctrl + c)
+
+- want to apply to all posts you create?
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+
+defaults:
+  -
+    scope:
+      path: ""  // leave path blank
+    values:
+        layout: "post"
+
+
+- jekyll theme (https://jekyllrb.com/tutorials/video-walkthroughs/)
+
+- agile sprint tutorial: 
+https://folio.gap.com/sites/AgileBasicsOnlineTraining
+https://www.atlassian.com/agile/tutorials/sprints
+https://confluence.gapinc.com/pages/viewpage.action?pageId=207761833
+
+- jekyll theme:
+https://rubygems.org/ > search for jekyll-theme
+
+serach result:
+> https://rubygems.org/search?utf8=%E2%9C%93&query=jekyll-theme
+> visit your favorite them site (usu github)
+Grab Usage
+> Usage
+To use the Primer theme:
+Add the following to your site's _config.yml:
+theme: jekyll-theme-primer
+
+Grab the theme name: "jekyll-theme-primer"
+
+1. > go to Gemfile > add 
+# This is the default theme for new Jekyll sites. You may change this to anything you like.
+gem "minima", "~> 2.0"
+gem "jekyll-theme-primer"
+
+2. _in terminal add)
+> bundle install // telling jekyll to install gems
+
+_inside of _config.yml) update the theme (https://youtu.be/NoRS2D-cyko?t=260)
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-primer <<< I am updating the gem name here!
+plugins:
+  - jekyll-feed
+
+Next, Run
+> bundle exec jekyll serve // use new theme
+
+_Now we could serve it once you have the theme updated in _config.yml file)
+1. > bundle install
+2. add theme inside of _config.yml)
+3. > bundle exec jekyll serve // use new theme
+  => this should run the newest theme
+
+but you will notice nothing is showing on your page with warning on your terminal saying no page, home not exist
+> notice under _layouts for your theme github
+they only have 1) default.html, 2) post.html
+(https://github.com/pages-themes/hacker/tree/master/_layouts)
+therefore, only use default
+TODO: update the front matter tags on your site to default _layout
+
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+layout: default
+---
+
+Try to keep the layouts to use single layout so it is easy to switch it out when adopting a new theme.
+
+
+- going back to theme: minima:
+about.md)
+layout: page
+
+contact.md)
+---
+layout: page
+title: Contact
+permalink: /contact/
+---
+
+index.md)
+---
+layout: home
+---
+
+_posts)
+---
+layout: post
+---
+
+--- Add customized layout in all posts:
+create) _layouts folder
+generally write your layout in html
+Create) _layouts/post.html
+* post.html // updating the post layout
+  <h1>This is a post</h1>
+  <hr>
+
+  {{ content }}
+
+- Creating front matter variable using front matter variable
+
+1. variable using inside of _layouts
+post.html)
+---
+layout: "wrapper"  << this is assigning another layout >>
+author: "Mike"
+---
+
+<h1>This is a post</h1>
+<h3>{{ layout.author }}</h3>
+<hr>
+
+{{ content }}
+
+_layout/swrapper.html)
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  Wrapper <br>
+  {{ content }}
+  <br> Wrapper
+</body>
+</html>
+
+- front matter variable : what you see as page heading info
+---
+layout: "wrapper"
+author: "Heggy HERE"
+---
+
+- you can change the site wide variable:
+https://jekyllrb.com/docs/variables/
+1) set variable on your layout wrapper page.
+  in wrapper.html)
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ site.title }}</title>
+  </head>
+  <body>
+    Wrapper <br>
+    {{ content }}
+    <br> Wrapper
+  </body>
+  </html>
+2) update in your _config.yml)
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+  title: Heggy's Tech Blog
+  email: heggy_castaneda@gap.com
+  description: >- # this means to ignore newlines until "baseurl:"
+    This is blog about Heggy's learning path as a part of interactive development plan set out for Stitch team.
+  baseurl: "" # the subpath of your site, e.g. /blog
+  url: "" # the base hostname & protocol for your site, e.g. http://example.com
+  twitter_username: heggyhere
+  github_username:  hcastan
+
+3) hard refresh it
+you will see it on your site title bar.
+More to look into: https://jekyllrb.com/docs/variables/
+
+- what is jekyll include?
+way to include site wide header info
+  1) create _includes folder
+  2) create header.html
+  <h1>{{ site.title }}</h1>
+  <hr><br>
+
+  3) inside of your highest level file.
+inside wrapper.html)
+  <body>
+    {% include header.html %}
+    Wrapper <br>
+    {{ content }}
+    <br> Wrapper
+  </body>
+  </html>
+
+inside _includes/header.html)
+  <h1>{{ site.title }}</h1>
+  <hr><br>
+
+- how to include a site wide header
+inside of my post.html layout file) 
+---
+layout: "wrapper"  <<< parent level highest level is wrapped by wrapper >>>
+author: "Heggy HERE"
+---
+
+<h1>{{ page.title }}</h1>
+<h3>{{ layout.author }}</h3>
+<h3>{{ page.author }}</h3>
+<hr> 
+
+{{ content }}
+
+inside of include header.html>
+<h1>{{ site.title }}</h1>
+<hr><br>
+
+store this infor and add to the layout wrapper > post > layout.
+
+- how to loop thru pages and posts (https://www.youtube.com/watch?v=6N1X5XffuUA&index=15&list=PLLAZ4kZ9dFpOPV5C5Ay0pHaa0RJFhcmcB)
+Goals: on home.html we want to show all our links.
+
+{% for post in site.posts %}
+  <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+  post title: {{ post.title }} <br>
+  post url: {{ post.url }} <br>
+{% endfor %}
+
+<hr>
+
+{% for page in site.pages %}
+  <li><a href="{{ page.url }} ">{{page.title}}</a></li>
+{% endfor %}
+
+
+- Conditionals: (https://youtu.be/iNZBEki_x6o)
+inside of post.html)
+---
+layout: "wrapper"
+author: "Heggy HERE"
+---
+
+{% if page.title == "Loop over" %}
+  I love this Loop over lesson!
+{% endif %}
+
+<h1>{{ page.title }}</h1>
+<h3>{{ layout.author }}</h3>
+<h3>{{ page.author }}</h3>
+<hr> 
+
+{{ content }}
+
+----- try out elsif with else inside _layouts/post.html
+{% if page.title == "Loop over" %}
+  ############# I love this Loop over lesson!
+{% elsif page.title == "Learn how to Jekyll front matter variables!" %}
+  ############# This shows title, author just like intro things.
+{% else %}
+  ############# This is another post
+{% endif %}
+
+<h1>{{ page.title }}</h1>
+<h3>{{ layout.author }}</h3>
+<h3>{{ page.author }}</h3>
+<hr> 
+
+{{ content }}
+
+----- try out and or inside of if elsif else stmt
+{% if page.title == "Loop over" %}
+  ############# I love this Loop over lesson!
+{% elsif page.title == "Learn how to Jekyll front matter variables!" %}
+  ############# This shows title, author just like intro things.
+{% else %}
+  ############# This is another post
+{% endif %}
+
+<h1>{{ page.title }}</h1>
+<h3>{{ layout.author }}</h3>
+<h3>{{ page.author }}</h3>
+<hr> 
+
+{{ content }}
+
+-- usecase for creating a navigation
+
+<hr>
+{% for post in site.posts %}
+
+{% endfor %}
+
+- how to create data files
+3 types of data files: 1) .yml 2) .jason 3) .csv
+
+json, csv great for database
+1) create _data folder inside root dir
+2) create people.yml
+- name: "Mike"
+  occupation: "GA teacher"
+
+- name: "Heggy"
+  occupation: "GA student"
+
+- name: "Sally"
+  occupation: "GA watcher"
+3) inside _layout > home.html)
+
+// here we are loop thru
+{% for person in site.data.people %}
+  {{ person.name }}, {{ person.occupation }} <br>
+{% endfor %}
+
+- Static Site Generator: 
+anything with no front matter ( static site such as js file, css, html
+1. inside root dir > asset folder) save few pdf, png files
+2. home.html
+// how to show where asset files are: site path
+{% for file in site.static_files %}
+  {{ file.path }}
+{% endfor %}
+
+Note: any static file it will be found by file.path using site.static_files!!!
+  You don't have to save static files under /assets/ folder only.
+
+- home.html different info you could loop thru
+
+{% for person in site.data.people %}
+  {{ person.name }}, {{ person.occupation }} <br>
+{% endfor %}
+
+<hr>
+
+{% for file in site.static_files %}
+  path: {{ file.path }} <br>
+  name: {{ file.name }} <br>
+  basename: {{ file.basename }} <br>
+  ext: {{ file.extname }} <br>
+{% endfor %}
+
+- Adding front matters to img files 
+1) root dir > create assets/img/
+move photos
+
+2) config.yml 
+create defaults variable for your img file
+// make new entry
+  set scope:
+    path: "assets/img" // this is where we will set the front matter variable to
+    // here we will give certain piece of front matter.
+  set values: // here we set all the front matter values
+    image: true // all the front matter image will set the image value true.
+Done!  Now we need to restart the server
+---- ex)
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+
+defaults:
+  - scope: 
+      path: "assets/img"
+    values: 
+      image: true
+
+-----
+
+- make it show the image on home page:
+inside _layouts/home.html)
+
+{% for file in site.static_files %}
+
+  {% if file.image %}
+    <img src="{{file.path}}" alt="{file.name}">
+  {% endif %}
+
+{% endfor %}
+
+---- 
+https://www.markdowntutorial.com/lesson/1/
+italic
+Writing in Markdown is _not_ that hard!
+
+bold: two asterisks ( ** )
+I **will** complete these lessons!
+
+bold and italic: (**_on the outside_**)
+* general, it doesn't matter which order you place the asterisks or underscores; Place the asterisks **_on the outside_**, just to make it more legible
+
+- 2 types of link style: first link style is called an inline link. [Visit GitHub!](www.github.com)
+[Search for it.](www.google.com)
+// add emphasis to link texts
+[You're **really, really** going to want to see this.](www.dailykitten.com)
+
+-Reference links don't appear in the rendered Markdown. You define them by providing the same tag name wrapped in brackets, followed by a colon, followed by the link.
+Do you want to [see something fun][a fun place]?
+
+Well, do I have [the website for you][another fun place]!
+
+[a fun place]: www.zombo.com
+[another fun place]: www.stumbleupon.comDo you want to [see something fun][a fun place]?
+
+Well, do I have [the website for you][another fun place]!
+
+[a fun place]: www.zombo.com
+[another fun place]: www.stumbleupon.com
+
+
+- how to run react on netlify how to app live react app
+create netlify.toml
+[build]
+base = "myapp/"
+publish = "myapp/build/"
+command = "npm run build"
+* along with the myapp folder that contains all react files
+
+keep all the setting on netlify
+################################################################
+
+- Learn command line
+https://www.codecademy.com/learn/learn-the-command-line
+What does ‘pwd’ stand for and what makes it useful?
+> ‘Print Working Directory’ pwd
+
+> cd jan/memory/ pwd
+> cd ../feb // jump up a level and to feb folder
+
+> mkdir media // create a new folder name media
+mkdir command stands for “make directory”. 
+
+- touch command creates new file inside of working dir
+
+> ls -t // order files and dir by the time they were modified.
+In addition to -a, the ls command has several more options. Here are three common options:
+  -a - lists all contents, including hidden files and directories
+  -l - lists all contents of a directory in long format
+  -t - order files and directories by the time they were last modified.
+
+ls -l
+$ ls -l
+drwxr-xr-x 5  cc  eng  4096 Jun 24 16:51  action
+drwxr-xr-x 4  cc  eng  4096 Jun 24 16:51  comedy
+drwxr-xr-x 6  cc  eng  4096 Jun 24 16:51  drama
+-rw-r--r-- 1  cc  eng     0 Jun 24 16:51  genres.txt
+The -l option lists files and directories as a table. Here there are four rows, with seven columns separated by spaces. Here’s what each column means:
+
+Access rights. These are actions that are permitted on a file or directory.
+Number of hard links. This number counts the number of child directories and files. This number includes the parent directory link (..) and current directory link (.).
+The username of the file’s owner. Here the username is cc.
+The name of the group that owns the file. Here the group name is eng.
+The size of the file in bytes.
+The date & time that the file was last modified.
+The name of the file or directory.
+https://www.codecademy.com/courses/learn-the-command-line/lessons/command-line-manipulation/exercises/ls-l?action=resume_content_item
+
+
+- multiple options used together:
+> ls -alt // lists in hidden, list, order by time were modified
+Here, ls -alt lists all contents, including hidden files and directories, in long format, ordered by the date and time they were last modified.
+
+> cp frida.txt
+> cp biopic/cleo.txt historical/  // copy from bio/cleo to historical/ folder
+> cp <source> <destination>
+Here, we copy the file biopic/cleopatra.txt and place it in the historical/ directory.
+> cp biopic/ray.txt biopic/notorious.txt historical/
+
+> cp * satire/ // omitting directories 'satire', 'slapstick' copies all other files
+only copies current directory files
+
+> ../../action/ // jump twice and go into action folder
+
+> cp m*.txt scifi/ // anything starting m* move to scifi folder
+
+- wildcard:
+The * selects all files in the working directory, so here we use cp to copy all files into the satire/ directory.
+> cp m*.txt scifi/
+
+- Here, m*.txt selects all files in the working directory starting with “m” and ending with “.txt”, and copies them to scifi/.
+
+3 ways to 
+> mv superman.txt superhero/  // move source destination
+
+> mv wonderwoman.txt batman.txt superhero/ //wonderwoman.txt and batman.txt both move into superhero/
+mv wonderwoman.txt batman.txt superhero/
+To move multiple files into a directory, use mv with a list of source files as the first arguments, and the destination directory as the last argument. Here, we move wonderwoman.txt and batman.txt into superhero/.
+
+> mv batman.txt spiderman.txt // renamess 
+
+> rm -r comedy
+The -r is an option that modifies the behavior of the rm command. The -r stands for “recursive,” and it’s used to delete a directory and all of its child directories
+
+Options modify the behavior of commands:
+ls -a lists all contents of a directory, including hidden files and directories
+ls -l lists all contents in long format
+ls -t orders files and directories by the time they were last modified
+Multiple options can be used together, like ls -alt
+From the command line, you can also copy, move, and remove files and directories:
+cp copies files
+mv moves and renames files
+rm removes files
+rm -r removes directories
+Wildcards are useful for selecting groups of files and directories
+
+- Defintion:
+
+* standard input, abbreviated as stdin, is information inputted into the terminal through the keyboard or input device.
+* standard output, abbreviated as stdout, is the information outputted after a process is run.
+* standard error, abbreviated as stderr, is an error message outputted by a failed process.
+
+> cat oceans.txt > continents.txt
+`>` replaces takes the standard output of the command on the left, and redirects it to the file on the right. Here the standard output of cat oceans.txt is redirected to continents.txt.
+
+Note that > overwrites all original content in continents.txt. When you view the output data by typing cat on continents.txt, you will see only the contents of oceans.txt.
+
+cat to view continent.txt
+cat 
+
+> cat glaciers.txt >> rivers.txt
+`>>` takes the standard output of the command on the left and appends (adds) it to the file on the right. You can view the output data of the file with cat and the filename.
+
+> cat < lakes.txt
+`<` takes the standard input from the file on the right and inputs it into the program on the left. Here, lakes.txt is the standard input for the cat command. The standard output appears in the terminal.
+
+> `|` is a “pipe”. The `|` takes the standard output of the command on the left, and pipes it as standard input to the command on the right. You can think of this as “command to command” redirection.
+
+> grep shelll dic.txt | less
+https://youtu.be/AWpVScp9z4s?t=65
+// grep: "global regular expression print,” processes text line by line and prints any lines which match a specified pattern.  Lines with particular content. Then it gets send to the `less` program which display result one page at a time.
+// wc: word count
+
+> `grep shell dictionary.txt | less` 
+// Look for any word with
+
+? How many words are there in dictionary.txt that match the pattern ibo?
+
+> uniq deserts.txt # unique deserts only
+> sort deserts.txt | uniq # sort and uniq deserts.txt
+> sort deserts.txt | uniq > uniq-deserts.txt # sort > unique deserts piping into store function inside uniq-deserts.txt file
+
+- Redirection:
+  1. `|` [pipes][pipes] things to another program or place
+  _(`grep`: "global regular expression print,” processes text line by line and prints any lines which match a specified pattern.  Lines with particular content. Then it gets send to the `less` program which display result one page at a time.)_
+
+    `grep shell dic.txt | less`
+  _(# look for any line that has "shell" > pipe it > less program)_
+
+  * Question: What is the distinction of the uses of output redirection, >, and piping, |? 
+  
+    `|` for input vs `>` for store
+
+    ex)
+
+    `x | y` # take the output of x and use it as the input for y
+
+    `x > y` # save, i.e. store, the output of x into the location defined by y
+
+
