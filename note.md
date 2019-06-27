@@ -33453,7 +33453,7 @@ Add a line to the beginning of script.sh to specify that it should be run using 
 #!/bin/bash
 
 
-- Run the script unix in the terminal.
+- Run script unix in the terminal.
   > ./script.sh to run the script.
 
 Within bash scripts (or the terminal for that matter), variables are declared by setting the variable name equal to another value. For example, to set the variable greeting to “Hello”, you would use the following syntax:
@@ -33572,8 +33572,601 @@ do
   greeting_occasion=$((greeting_occasion + 1))
 done
 ```
+[9:52 AM] Johnee Evanofski
+try this and see how far you can get:
+1. checkout your twocol branch 
+2. git rebase master 
+3. there will be conflicts you can see by doing git status 
+4. look at each file and fix the conflicts, keep the changes that you want on your new branch (this may break your jekyll serve) 
+5. once you've made your changes 
+6. git rebase --continue 
+7. git status 
+8. once all conflicts are resolved you're good to go 
+9. you may need to force push the branch back up git push -f 
+Edited
+
+[9:56 AM] Johnee Evanofski
+if you mess up all of your stuff while you're still in rebase you can start over with git rebase --abort
+
+[9:57 AM] Johnee Evanofski
+if the rebase finishes and it doesn't look how you want it to just force pull down from github and overwrite your changes
 
 
+LEARN BASH SCRIPTING
+Inputs
+To make bash scripts more useful, we need to be able to access data external to the bash script file itself. The first way to do this is by prompting the user for input. For this, we use the read syntax. To ask the user for input and save it to the number variable, we would use the following code:
+
+echo "Guess a number"
+read number
+echo "You guessed $number"
+Another way to access external data is to have the user add input arguments when they run your script. These arguments are entered after the script name and are separated by spaces. For example:
+
+saycolors red green blue
+Within the script, these are accessed using $1, $2, etc, where $1 is the first argument (here, “red”) and so on. Note that these are 1 indexed.
+
+If your script needs to accept an indefinite number of input arguments, you can iterate over them using the "$@" syntax. For our saycolors example, we could print each color using:
+
+for color in "$@"
+do
+  echo $color
+done
+Lastly, we can access external files to our script. You can assign a set of files to a variable name using standard bash pattern matching using regular expressions. For example, to get all files in a directory, you can use the * character:
+
+files=/some/directory/*
+You can then iterate through each file and do something. Here, lets just print the full path and filename:
+
+for file in $files
+do
+  echo $file
+done
+
+---
+layout: post
+title:  "Git Merge Conflict"
+date:   2019-06-25 14:30:00 -0700
+categories: git merge conflict
+---
+
+## Scenario:
+I am on `twocol` branch on github.  There is a merge conflict when trying to merge from `twocol` branch to `gh-pages` branch.  What are the steps to resolve my conflicts?
+
+<img src="{{ site.baseurl }}/images/branches.png" alt="github 3 branches" width="350px">
+
+## Take away:
+ 
+- Checkout twocol branch `git checkout twocol`
+- `git rebase gh-pages`
+
+<img src="{{ site.baseurl }}/images/rebase-gh-pg.png" alt="rebase gh-pg" width="500px">
+
+- `git status` _(view conflicts)_
+
+<img src="{{ site.baseurl }}/images/modified.png" alt="conflict messages" width="500px">
+
+- Open code editor and look at the files that says **`both modified`**.  Most of the times `Accept incoming changes` is the right answer _(since incoming change *is* the new code you want to keep)_.  Otherwise, fix the conflicts by selecting one of the choices you see on the screen.
+
+<img src="{{ site.baseurl }}/images/incoming-change.png" alt="incoming current incoming selections" width="500px">
+
+- Once you've made your changes for all **`both modified`** files; `save` your changes.  In your terminal, `git add .` > `git rebase --continue` > `git status` _(If there are more conflicts; repeat previous steps to fix all the conflicts)_
+- `git rebase --continue`
+- `git status`
+- Once all conflicts are resolved; you may see `nothing to commit`.  You are done resolving your conflicts!
+
+<img src="{{ site.baseurl }}/images/conflict-non.png" alt="no more conflict" width="500px">
+
+- Force push the branch back up `git push -f`
+- **DONE**
+
+## Help:
+- If you mess up and **while you're still in `rebase`**; you can start over with `git rebase --abort`
+- If the rebase finishes and your code doesn't look how you want it then just force pull down from github and overwrite your changes.
+- **[Article][resolveConflict]** on resolving conflict with git.
+
+[resolveConflict]:http://inlehmansterms.net/2014/12/14/resolving-conflicts-in-git-with-ours-and-theirs/
+
+LEARN BASH SCRIPTING
+Inputs
+To make bash scripts more useful, we need to be able to access data external to the bash script file itself. The first way to do this is by prompting the user for input. For this, we use the read syntax. To ask the user for input and save it to the number variable, we would use the following code:
+
+echo "Guess a number"
+read number
+echo "You guessed $number"
+Another way to access external data is to have the user add input arguments when they run your script. These arguments are entered after the script name and are separated by spaces. For example:
+
+saycolors red green blue
+Within the script, these are accessed using $1, $2, etc, where $1 is the first argument (here, “red”) and so on. Note that these are 1 indexed.
+
+If your script needs to accept an indefinite number of input arguments, you can iterate over them using the "$@" syntax. For our saycolors example, we could print each color using:
+
+for color in "$@"
+do
+  echo $color
+done
+Lastly, we can access external files to our script. You can assign a set of files to a variable name using standard bash pattern matching using regular expressions. For example, to get all files in a directory, you can use the * character:
+
+files=/some/directory/*
+You can then iterate through each file and do something. Here, lets just print the full path and filename:
+
+for file in $files
+do
+  echo $file
+done
+
+#!/bin/bash
+first_greeting="Nice to meet you!"
+later_greeting="How are you?"
+greeting_occasion=0
+echo "enter greeting_limit"
+read greeting_limit
+echo "You input $greeting_limit"
+while [ $greeting_occasion -lt $greeting_limit ]
+do
+  if [ $greeting_occasion -lt 1 ]
+  then
+    echo $first_greeting
+  else
+    echo $later_greeting
+  fi
+  greeting_occasion=$((greeting_occasion + 1))
+done
 
 
+Q I didn't get right) Get user input and assign it to the variable greeting_limit. Replace the limit of 3 in the while loop with $greeting_limit.
+
+#!/bin/bash
+first_greeting="Nice to meet you!"
+later_greeting="How are you?"
+greeting_occasion=0
+echo "How many times should I greet?"
+read greeting_limit
+while [ $greeting_occasion -lt $greeting_limit ]
+do
+  if [ $greeting_occasion -lt 1 ]
+  then
+    echo $first_greeting
+  else
+    echo $later_greeting
+  fi
+  greeting_occasion=$((greeting_occasion + 1))
+done
+
+for word in $paragraph
+do
+  echo $word
+done
+Note that word is being “defined” at the top of the for loop so there is no $ prepended. Remember that we prepend the $ when accessing the value of the variable. So, when accessing the variable within the do block, we use $word as usual. 
+
+- input:
+To make bash scripts more useful, we need to be able to access data external to the bash script file itself. The first way to do this is by prompting the user for input. For this, we use the read syntax. To ask the user for input and save it to the number variable, we would use the following code:
+
+echo "Guess a number"
+read number
+echo "You guessed $number"
+
+- Aliases
+You can set up aliases for your bash scripts within your .bashrc or .bash_profile file to allow calling your scripts without the full filename. For example, if we have our saycolors.sh script, we can alias it to the word saycolors using the following syntax:
+
+alias saycolors='./saycolors.sh'
+You can even add standard input arguments to your alias. For example, if we always want “green” to be included as the first input to saycolors, we could modify our alias to:
+
+alias saycolors='./saycolors.sh "green"`
+
+Our script is updated to take an argument for the number of times the user wants to be greeted:
+
+./script.sh 5 #greets 5 times
+Let’s create an alias so that when you type greet3 in the terminal, our script greets you three times.
+
+In your own environment, you could add this alias to your ~/.bashrc to make the alias active every time the terminal is started.
+
+- Aliases:
+Create an alias `greet3` that calls ./script.sh with argument 3.
+
+In your own environment, you could add this alias to your `~/.bashrc` to make the alias active every time the terminal is started.
+
+```
+alias greet3="./script.sh 3" #greets 3 times
+```
+
+Take a minute to review what you’ve learned about bash scripting.
+
+Any command that can be run in the terminal can be run in a bash script.
+Variables are assigned using an equals sign with no space (greeting="hello").
+Variables are accessed using a dollar sign (echo $greeting).
+Conditionals use if, then, else, fi syntax.
+Three types of loops can be used: for, while, and until.
+Bash scripts use a unique set of comparison operators:
+Equal: -eq
+Not equal: -ne
+Less than or equal: -le
+Less than: -lt
+Greater than or equal: -ge
+Greater than: -gt
+Is null: -z
+Input arguments can be passed to a bash script after the script name, separated by spaces (myScript.sh “hello” “how are you”).
+Input can be requested from the script user with the read keyword.
+Aliases can be created in the .bashrc or .bash_profile using the alias keyword.
+
+## Take away
+
+- `git log` after committing you can see the sha of your commit
+
+<img src="{{ site.baseurl }}/images/git-hash.png" alt="git hash" width="500px">
+
+- `git checkout` undo last commit
+- `git reset HEAD index.html` ignore what is in the staging environment
+  ex) revision 2 in staging, revision 3 in working environment
+- `git reset HEAD` would ignore whatever in the staging environment.
+  ex) `git reset HEAD about.html` #unstaged changes after reset
+  - **Shortcut Command:** `git rm about.html` #deletes and stages all in one step!
+### Definition
+- working environment: not staged, just ready to be saved.
+
+
+[Github linkedin]:https://www.linkedin.com/learning/learning-git-and-github/welcome?u=2104025
+
+* Goal - git: delete, stage all at once then undo that delete!
+  > git rm about.html #stages the deletion all in one
+  > git status #staged deletion
+  > git reset HEAD ch2/about.html # unstage changes after reset
+  > git checkout about.html #undo the delete finally
+
+* pull the commit back into the work environment
+  > git checkout fc9f9ed6b7eb017e640f391473bd4c9f6fbed301
+  #bring you back to that commit 
+  git HEAD is detached which is like an alternative universe
+
+  > git branch # 
+When to create branch?
+  as soon as you want that code later
+  You really love current state of app and want to get back to it whenever you want.
+  > git branch alternate 008e2fa
+- what if you on branch you really like to bring that changes back to the master? 
+  bring everything from app01 to master!
+  > git merge app01 #Important to be on destination branch already.
+
+* Change the name of branch?
+  current app01 >> app1
+  > git branch -m <origin> <destination>
+  -m means move to another
+  > git branch -m app01 app1 #git name change!!!
+
+> git branch -D alternate #delete branch
+teacher's github site
+https://github.com/planetoftheweb
+- https://github.com/planetoftheweb/angulardata
+
+- .gitignore file example
+.DS_Store #tracks all the file activities on mac
+node_modules
+.tmp
+npm-debug.log
+
+- https://github.com/planetoftheweb/responsivebootstrap 
+
+- .gitignore file with images ignore
+.DS_Store
+node_modules
+.tmp
+builds/development/images/**
+
+- copy + drag a file (click + option + drag to anywhere!)
+click the file + option + drag #makes a copy of file to whereever you drag
+> git branch -a #show all 
+> git checkout -b 02_01
+
+> git checkout -b 02_01 origin/02_01 #from branch remote 02_01 bring it local origin/ and create local branch local 02_01 (convention to keep the name the same), and then automatically switch to that branch
+
+* how to d/l all the branches from remote repo:
+this repo: https://github.com/planetoftheweb/responsivebootstrap
+
+* > git clone --mirror https://github.com/planetoftheweb/responsivebootstrap.git .git #copy invisible git folder and all branches
+  - open up your file and you will see just a bare repo and .git 
+  > ls -la #displays invisible .git folder 
+  - go inside of .git folder
+  > git config --bool core.bare false #switch from bare repo to regular repo
+  > git reset --hard #grab all files from remote and create all files in local 
+
+- git essential training: https://www.lynda.com/Git-tutorials/Git-Essential-Training-Basics-REVISION-2019-Q1/5030978-2.html?org=smcl.org
+
+  * branch early, and branch often (Git enthusiasts chant the mantra)
+
+when does branch get ahead?
+  > git checkout <branchName>
+  > git checkout newImage; git commit
+ 
+
+Ok! You are all ready to get branching. Once this window closes, make a new branch named bugFix and switch to that branch.
+
+By the way, here's a shortcut: if you want to create a new branch AND check it out at the same time, you can simply type 
+  > git checkout -b [yourbranchname]
+  > git checkout -b bugfix
+
+Branches and Merging
+Great! We now know how to commit and branch. Now we need to learn some kind of way of combining the work from two different branches together. This will allow us to branch off, develop a new feature, and then combine it back in.
+
+The first method to combine work that we will examine is git merge. Merging in Git creates a special commit that has two unique parents. A commit with two parents essentially means "I want to include all the work from this parent over here and this one over here, and the set of all their parents."
+
+It's easier with visuals, let's check it out in the next view
+
+Here we have two branches; each has one commit that's unique. This means that neither branch includes the entire set of "work" in the repository that we have done. Let's fix that with merge.
+
+We will merge the branch bugFix into master
+> git merge bugFix
+
+Woah! See that? First of all, master now points to a commit that has two parents. If you follow the arrows up the commit tree from master, you will hit every commit along the way to the root. This means that master contains all the work in the repository now.
+
+Also, see how the colors of the commits changed? To help with learning, I have included some color coordination. Each branch has a unique color. Each commit turns a color that is the blended combination of all the branches that contain that commit.
+
+So here we see that the master branch color is blended into all the commits, but the bugFix color is not. Let's fix that...
+
+Let's merge master into bugFix:
+
+> git checkout bugFix; git merge master
+
+Since bugFix was an ancestor of master, git didn't have to do any work; it simply just moved bugFix to the same commit master was attached to.
+
+Now all the commits are the same color, which means each branch contains all the work in the repository! Woohoo!
+
+To complete this level, do the following steps:
+
+Make a new branch called `bugFix`
+Checkout the `bugFix` branch with `git checkout bugFix`
+> git checkout -b bugFix
+Commit once 
+> git commit -m "Hello"
+Go back to `master` with `git checkout`
+> git checkout master
+Commit another time
+> git commit -m "I am already on master"
+Merge the branch `bugFix` into `master` with `git merge`
+> git merge bugFix
+Remember, you can always re-display this dialog with "objective"!
+
+## Git Rebase
+The second way of combining work between branches is rebasing. Rebasing essentially takes a set of commits, "copies" them, and plops them down somewhere else.
+
+While this sounds confusing, the advantage of rebasing is that it can be used to make a nice linear sequence of commits. The commit log / history of the repository will be a lot cleaner if only rebasing is allowed.
+
+Let's see it in action...
+
+Here we have two branches yet again; note that the bugFix branch is currently selected (note the asterisk)
+
+We would like to move our work from bugFix directly onto the work from master. That way it would look like these two features were developed sequentially, when in reality they were developed in parallel.
+
+Let's do that with the git rebase command
+> git rebase master
+
+Now we are checked out on the master branch. Let's go ahead and rebase onto bugFix...
+> git rebase bugFix
+
+There! Since `master` was an ancestor of `bugFix`, git simply moved the `master` branch reference forward in history.
+
+To complete this level, do the following
+
+Checkout a new branch named bugFix
+> git checkout -b bugFix
+Commit once
+> git commit -m "first message for bugFix"
+Go back to master and commit again
+> git checkout master
+> git commit -m "master now"
+Check out bugFix again and rebase onto master
+#important if you mess up do `undo`
+> git checkout bugFix
+> git rebase master #once on bugFix > rebase onto master
+
+Good luck!
+** help walk thru video:
+https://www.youtube.com/watch?v=dG0ke9vILQM
+
+
+Moving around in Git
+Before we get to some of the more advanced features of Git, it's important to understand different ways to move through the commit tree that represents your project.
+
+Once you're comfortable moving around, your powers with other git commands will be amplified!
+
+HEAD
+First we have to talk about "HEAD". HEAD is the symbolic name for the currently checked out commit -- it's essentially what commit you're working on top of.
+
+HEAD always points to the most recent commit which is reflected in the working tree. Most git commands which make changes to the working tree will start by changing HEAD.
+
+Normally HEAD points to a branch name (like bugFix). When you commit, the status of bugFix is altered and this change is visible through HEAD.
+
+HEAD demo:
+Let's see this in action. Here we will reveal HEAD before and after a commit.
+> git checkout C1
+> git checkout master
+> git commit
+> git checkout C2
+
+See! HEAD was hiding underneath our master branch all along.
+
+Detaching HEAD
+Detaching HEAD just means attaching it to a commit instead of a branch. This is what it looks like beforehand:
+
+HEAD -> master -> C1
+
+Detach HEAD from `master` and attach it to C1 commit
+> git checkout C1
+
+HEAD -> C1
+
+To complete this level, let's detach HEAD from `bugFix` and attach it to the commit instead.
+
+Specify this commit by its hash. The hash for each commit is displayed on the circle that represents the commit.
+
+HEAD -> bugFix -> C1
+let's detach HEAD from `bugFix` 
+HEAD -> C4
+and attach it to the commit C4 instead.
+> git checkout C4
+
+Relative Refs
+Moving around in Git by specifying commit hashes can get a bit tedious. In the real world you won't have a nice commit tree visualization next to your terminal, so you'll have to use git log to see hashes.
+
+Furthermore, hashes are usually a lot longer in the real Git world as well. For instance, the hash of the commit that introduced the previous level is fed2da64c0efc5293610bdd892f82a58e8cbc5d8. Doesn't exactly roll off the tongue...
+
+The upside is that Git is smart about hashes. It only requires you to specify enough characters of the hash until it uniquely identifies the commit. So I can type fed2 instead of the long string above.
+
+Like I said, specifying commits by their hash isn't the most convenient thing ever, which is why Git has relative refs. They are awesome!
+
+With relative refs, you can start somewhere memorable (like the branch `bugFix` or `HEAD`) and work from there.
+
+Relative commits are powerful, but we will introduce two simple ones here:
+
+Moving upwards one commit at a time with `^`
+Moving upwards a number of times with `~<num>`
+
+Let's look at the Caret (^) operator first. Each time you append that to a ref name, you are telling Git to find the parent of the specified commit.
+
+So saying master^ is equivalent to "the first parent of master".
+
+master^^ is the grandparent (second-generation ancestor) of master
+
+Let's check out the commit above master here
+> git checkout master^
+
+Boom! Done. Way easier than typing the commit hash
+
+You can also reference HEAD as a relative ref. Let's use that a couple of times to move upwards in the commit tree
+> git checkout C3
+> git checkout HEAD^
+> git checkout HEAD^
+> git checkout HEAD^
+
+We can travel backwards in time with HEAD^
+
+To complete this level, check out the parent commit of bugFix. This will detach HEAD.
+
+You can specify the hash if you want, but try using relative refs instead!
+
+check out the parent commit of bugFix. This will detach HEAD.
+> git checkout bugFix^ #use relative refs to parent commit of bugFix
+
+"Relative Refs #2 (~)",
+The "~" operator: like multiply
+Say you want to move a lot of levels up in the commit tree. It might be tedious to type ^ several times, so Git also has the tilde (~) operator.
+
+The tilde operator (optionally) takes in a trailing number that specifies the number of parents you would like to ascend. Let's see it in action
+
+Let's specify a number of commits back with ~
+> git checkout HEAD~4 #move up 4 levels or parents
+
+## Branch forcing
+You're an expert on relative refs now, so let's actually use them for something.
+
+One of the most common ways I use relative refs is to move branches around. You can directly reassign a branch to a commit with the -f option. So something like:
+
+> git branch -f master HEAD~3
+
+moves (by force) the master branch to three parents behind HEAD.
+
+C4(Master/buFix*) -> C3 -> C2 -> C1 -> C0
+
+> git branch -f master HEAD~3 #rolls back master
+
+Relative refs gave us a concise way to refer to `C1` and branch forcing (`-f`) gave us a way to quickly move a branch to that location.
+
+Now that you have seen relative refs and branch forcing in combination, let's use them to solve the next level.
+
+To complete this level, move `HEAD`, `master`, and `bugFix` to their goal destinations shown.
+
+> git branch -f bugFix bugFix~3 #bugFix will jump 3 times of its parent up the commit tree and directly reassign a branch to a commit _(with the -f option)_
+
+> git checkout C1 #move HEAD from c2 to c1
+> git branch -f master C6 #move master to C6 (remember to directly reassign a branch to a commit with the -f option)
+
+# Reversing Changes in Git", the next level
+Reversing Changes in Git
+There are many ways to reverse changes in Git. And just like committing, reversing changes in Git has both a low-level component (staging individual files or chunks) and a high-level component (how the changes are actually reversed). Our application will focus on the latter.
+
+There are two primary ways to undo changes in Git -- one is using `git reset` and the other is using `git revert`. We will look at each of these in the next dialog
+
+# Git Reset: git reset HEAD "rewriting history;"
+git reset reverts changes by moving a branch reference backwards in time to an older commit. In this sense you can think of it as "rewriting history;" git reset will move a branch backwards as if the commit had never been made in the first place.
+
+Let's see what that looks like:
+`> git reset HEAD~1` #Git moved the master branch reference back to C1; now our local repository is in a state as if C2 had never happened.
+
+## Git Revert: reverse changes and share those reversed changes
+While resetting works great for local branches on your own machine, its method of "rewriting history" doesn't work for remote branches that others are using.
+
+In order to reverse changes and share those reversed changes with others, we need to use git revert. Let's see it in action
+
+`> git revert HEAD` #new commit C2' introdues changes (undo reverses the commit of C2), you can push out your changes to share with others
+
+Weird, a new commit plopped down below the commit we wanted to reverse. That's because this new commit C2' introduces changes -- it just happens to introduce changes that exactly reverses the commit of C2.
+
+With reverting, you can push out your changes to share with others.
+
+To complete this level, reverse the most recent commit on both local and pushed. You will revert two commits total (one per branch).
+
+1. reverse the most recent commit on both local and pushed. You will revert two commits total (one per branch).
+> git reset HEAD~1 #local* commit reverse
+> git checkout pushed #remote therefore we are not on it now. we need to checkout then move HEAD
+> git revert HEAD 
+
+Keep in mind that pushed is a remote branch and local is a local branch -- that should help you choose your methods.
+
+pushed : remote
+local : local branch
+
+
+`levels` << navigating inside learn git
+
+# "Cherry-pick Intro", the next level?
+- Moving Work Around
+So far we've covered the basics of git -- committing, branching, and moving around in the source tree. Just these concepts are enough to leverage 90% of the power of git repositories and cover the main needs of developers.
+
+That remaining 10%, however, can be quite useful during complex workflows (or when you've gotten yourself into a bind). The next concept we're going to cover is "moving work around" -- in other words, it's a way for developers to say "I want this work here and that work there" in precise, eloquent, flexible ways.
+
+This may seem like a lot, but it's a simple concept.
+- Git Cherry-pick
+The first command in this series is called git cherry-pick. It takes on the following form:
+
+git cherry-pick <Commit1> <Commit2> <...>
+It's a very straightforward way of saying that you would like to copy a series of commits below your current location (HEAD). I personally love cherry-pick because there is very little magic involved and it's easy to understand.
+
+- Here's a repository where we have some work in branch `side` that we want to copy to `master`. This could be accomplished through a rebase (which we have already learned), but let's see how cherry-pick performs.
+
+`> git cherry-pick C2 C4` #cherry-pick commits C2 and C4, git plopped them down right below us. 
+  > git cherry-pick bugFix side^ another #relative path use of cherry-pick
+  > git cherry-pick C3 C4 C7 #I am on C1 master*, cherry-pick commits C3', C4', C7', git plopped them down right below C1 (master*)
+
+- Git Interactive Rebase:
+Git cherry-pick is great when you know which commits you want (and you know their corresponding hashes) -- it's hard to beat the simplicity it provides.
+
+But what about the situation where you don't know what commits you want? Thankfully git has you covered there as well! We can use interactive rebasing for this -- it's the best way to review a series of commits you're about to rebase.
+
+Let's dive into the details...
+
+All interactive rebase means is using the `rebase` command with the `-i` option.
+
+If you include this option, git will open up a UI to show you which commits are about to be copied below the target of the rebase. It also shows their commit hashes and messages, which is great for getting a bearing on what's what.
+
+For "real" git, the UI window means opening up a file in a text editor like vim. For our purposes, I've built a small dialog window that behaves the same way.
+
+When the interactive rebase dialog opens, you have the ability to do 3 things:
+
+* You can reorder commits simply by changing their order in the UI (in our window this means dragging and dropping with the mouse).
+* You can choose to completely omit some commits. This is designated by `pick` -- toggling `pick` off means you want to drop the commit.
+* Lastly, you can squash commits. Unfortunately our `levels` don't support this for a few logistical reasons, so I'll skip over the details of this. Long story short, though -- it allows you to combine commits.
+
+- interactive rebase window will appear. Reorder some commits around (or feel free to unpick some) and see the result!
+> git rebase -i HEAD~4
+
+To finish this level, do an interactive rebase and achieve the order shown in the goal visualization. Remember you can always undo or reset to fix mistakes :D
+
+- Locally stacked commits
+Here's a development situation that often happens: I'm trying to track down a bug but it is quite elusive. In order to aid in my detective work, I put in a few debug commands and a few print statements.
+
+`All` of these debugging / print statements are in their own commits. Finally I track down the bug, fix it, and rejoice!
+
+Only problem is that I now need to get my `bugFix` back into the `master` branch. If I simply fast-forwarded `master`, then `master` would get all my debug statements which is undesirable. There has to be another way...
+
+We need to tell git to copy only one of the commits over. This is just like the levels earlier on moving work around -- we can use the same commands:
+
+  `> git rebase -i`
+  `> git cherry-pick`
+To achieve this goal.
 
