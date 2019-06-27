@@ -34170,3 +34170,339 @@ We need to tell git to copy only one of the commits over. This is just like the 
   `> git cherry-pick`
 To achieve this goal.
 
+https://www.youtube.com/watch?v=dG0ke9vILQM
+
+- next level: grab just one commit
+Locally stacked commits
+Here's a development situation that often happens: I'm trying to track down a bug but it is quite elusive. In order to aid in my detective work, I put in a few debug commands and a few print statements.
+
+All of these debugging / print statements are in their own commits. `Finally` I track down the bug, fix it, and rejoice!
+
+Only problem is that I now need to get my `bugFix` back into the `master` branch. If I simply fast-forwarded `master`, then `master` would get all my debug statements which is undesirable. There has to be another way...
+
+  `> git rebase -i`
+  `> git cherry-pick`
+
+In order to complete the level, make sure `master` receives the commit that `bugFix` references.
+- Make sure master receives the commit that bugFix references.
+`> git rebase -i master` #begin `interactive rebase`
+> 
+
+## Take away
+
+- `git rebase -i HEAD~4` #jump HEAD x4 level up with interactive rebase with my picked commits on top.
+
+  **_ex)_** I am on `master*(C5)`, move back the history `HEAD` 4 levels up which brings me to commit `C1`.  Then I pick commit `C5`, `C4` on top.  Then I omit commit `C2` and commit as interactive rebase (`> git rebase -i HEAD~4`)
+
+  <img src="{{ site.baseurl }}/images/start-i-rebase.png" alt="start rebase point" width="500px">
+
+    - My git command: `> git rebase -i HEAD~4`
+
+    - Interactive rebasing:
+
+  <img src="{{ site.baseurl }}/images/rebase-interactive.png" alt="pick choose rebase" width="500px">
+
+    - Final result:
+
+  <img src="{{ site.baseurl }}/images/rebase-i-done.png" alt="pick choose rebase" width="500px">
+
+    **_ex)_** Make sure master receives the commit that bugFix references with no `printf` and `debug`.
+
+  <img src="{{ site.baseurl }}/images/git-grab-just-one.png" alt="mix bag challenge grab just one" width="700px">
+
+    - My git command: `> git rebase -i master` #begin `interactive rebase`
+
+    - Interactive rebasing: I am on `bugFix(C4)`.  I want to go back in time where `master(C1)` only has `bugFix(C4)`.  Therefore, I omit 2 commits: `debug(C2)` and `printf(C3)`.
+
+  <img src="{{ site.baseurl }}/images/git-no-printstmt.png" alt="no print stmt" width="500px">
+
+  <img src="{{ site.baseurl }}/images/rebase-only-bugfix.png" alt="no print stmt" width="500px">
+
+    - Next, I want to switch my branch to `master`: 
+    
+    `> git checkout master` #`*` indicates what branch I am on which here is `master` branch. 
+
+  <img src="{{ site.baseurl }}/images/switch-b-master.png" alt="switch branch to master" width="500px">
+
+    - Finally, I want to merge my `bugFix` only commit to `master` branch.
+
+  <img src="{{ site.baseurl }}/images/only-bugfix.png" alt="only bug fix gets merged" width="500px">
+
+- Git Cherry-pick takes following form `> git cherry-pick <Commit1> <Commit2> <...>`.  In layman's terms
+
+How to navigate in learngitbranchg.js
+> level select 
+> undo
+
+
+- Juggling Commits
+Here's another situation that happens quite commonly. You have some changes (newImage) and another set of changes (caption) that are related, so they are stacked on top of each other in your repository (aka one after another).
+
+The tricky thing is that sometimes you need to make a small modification to an earlier commit. In this case, design wants us to change the dimensions of newImage slightly, even though that commit is way back in our history!!
+
+We will overcome this difficulty by doing the following:
+
+We will re-order the commits so the one we want to change is on top with `git rebase -i`
+We will `commit --amend` to make the slight modification
+`Then` we will re-order the commits back to how they were previously with `git rebase -i`
+Finally, we will move `master` to this updated part of the tree to finish the level (via the method of your choosing)
+
+There are many ways to accomplish this overall goal (I see you eye-ing cherry-pick), and we will see more of them later, but for now let's focus on this technique. Lastly, pay attention to the goal state here -- since we move the commits twice, they both get an apostrophe appended. One more apostrophe is added for the commit we amend, which gives us the final form of the tree
+
+That being said, I can compare levels now based on structure and relative apostrophe differences. As long as your tree's master branch has the same structure and relative apostrophe differences, I'll give full credit
+
+> show solution // to see the answer
+> reset --forSolution // reset the solution
+
+1) You have some changes (newImage:C2) and another set of changes (caption:C3) that are related, so they are stacked on top of each other in your repository (aka one after another).
+** We will re-order the commits so the one we want to change is on top with `git rebase -i`
+> git rebase -i HEAD~2 #move to master branch by jumping twice, I am currently on caption which is 2 steps behind
+Next, re-order C3 and C2 in interactive git rebase.
+
+2) We will `commit --amend` to make the slight modification
+> git commit --ammend
+
+3) re-order the commits back to how they were previously with `git rebase -i`
+> git rebase -i HEAD~2 #re-order the commits
+
+4) Move `master` to this updated part of the tree to finish the level (via the method of your choosing)
+> git rebase caption master
+
+- Juggling Commits #2
+If you haven't completed Juggling Commits #1 (the previous level), please do so before continuing
+
+As you saw in the last level, we used rebase -i to reorder the commits. Once the commit we wanted to change was on top, we could easily --amend it and re-order back to our preferred order.
+
+The only issue here is that there is a lot of reordering going on, which can introduce rebase conflicts. Let's look at another method with git cherry-pick
+
+> git cherry-pick will plop down a commit from anywhere in the tree onto HEAD (as long as that commit isn't an ancestor of HEAD).
+
+Here's a small refresher demo:
+> git cherry-pick C2 # master* => only pick that C2 bugfix and commit
+
+So in this level, let's accomplish the same objective of amending C2 once but avoid using rebase -i. I'll leave it up to you to figure it out! :D
+
+Remember, the exact number of apostrophe's (') on the commit are not important, only the relative differences. For example, I will give credit to a tree that matches the goal tree but has one extra apostrophe everywhere
+
+Same goal now with cherry-pick:
+> git checkout master #bring the HEAD to master
+> git cherry-pick C2 #plop C2 on master
+> git commit --amend #now that change is on top, we could easily --amend it
+> git cherry-pick C3 #plop C3 on ammended master with C2
+done
+
+- Git Tags
+As you have learned from previous lessons, branches are easy to move around and often refer to different commits as work is completed on them. Branches are easily mutated, often temporary, and always changing.
+
+If that's the case, you may be wondering if there's a way to permanently mark historical points in your project's history. For things like major releases and big merges, is there any way to mark these commits with something more permanent than a branch?
+
+You bet there is! Git tags support this exact use case -- they (somewhat) permanently mark certain commits as "milestones" that you can then reference like a branch.
+
+More importantly though, they never move as more commits are created. You can't "check out" a tag and then complete work on that tag -- tags exist as anchors in the commit tree that designate certain spots.
+
+Let's see what tags look like in practice.
+Let's try making a tag at C1 which is our version 1 prototype:
+> git tag v1 C1
+
+There! Quite easy. We named the tag v1 and referenced the commit C1 explicitly. If you leave the commit off, git will just use whatever HEAD is at
+
+
+For this level just create the tags in the goal visualization and then check v1 out. Notice how you go into detached HEAD state -- this is because you can't commit directly onto the v1 tag.
+
+In the next level we'll examine a more interesting use case for tags.
+
+> git checkout C2 # move the head to C2
+> git tag V1 C2 # tag C2 with V1
+> git tag V0 C1 # tag C1 with V0
+
+# Git Describe
+Because tags serve as such great "anchors" in the codebase, git has a command to describe where you are relative to the closest "anchor" (aka tag). And that command is called git describe!
+
+Git describe can help you get your bearings after you've moved many commits backwards or forwards in history; this can happen after you've completed a git bisect (a debugging search) or when sitting down at a coworkers computer who just got back from vacation.
+
+- Git describe takes the form of:
+
+`git describe <ref>`
+
+Where `<ref>` is anything git can resolve into a commit. If you don't specify a ref, git just uses where you're checked out right now (`HEAD`).
+
+The output of the command looks like:
+
+<tag>_<numCommits>_g<hash>
+
+Where `tag` is the closest ancestor tag in history, `numCommits` is how many commits away that tag is, and `<hash>` is the hash of the commit being described.
+
+`> git tag v2 C3`
+
+The command `git describe master` would output:
+
+`> v1_2_gC2`
+
+Whereas `git describe side` would output:
+
+`> v2_1_gC4`
+
+That's pretty much all there is to git describe! Try describing a few of the locations in this level to get a feel for the command.
+
+Once you're ready, just go ahead and commit once to finish the level. We're giving you a freebie :P
+
+- Git Remotes
+Remote repositories aren't actually that complicated. In today's world of cloud computing it's easy to think that there's a lot of magic behind git remotes, but they are actually just copies of your repository on another computer. You can typically talk to this other computer through the Internet, which allows you to transfer commits back and forth.
+
+That being said, remote repositories have a bunch of great properties:
+
+First and foremost, remotes serve as a great backup! Local git repositories have the ability to restore files to a previous state (as you know), but all that information is stored locally. By having copies of your git repository on other computers, you can lose all your local data and still pick up where you left off.
+
+More importantly, remotes make coding social! Now that a copy of your project is hosted elsewhere, your friends can contribute to your project (or pull in your latest changes) very easily.
+
+It's become very popular to use websites that visualize activity around remote repos (like Github or Phabricator(https://www.phacility.com/)), but remote repositories always serve as the underlying backbone for these tools. So it's important to understand them!
+
+- Our Command to create remotes
+Up until this point, Learn Git Branching has focused on teaching the basics of local repository work (branching, merging, rebasing, etc). However now that we want to learn about remote repository work, we need a command to set up the environment for those lessons. `git clone` will be that command
+
+Technically, `git clone` in the real world is the command you'll use to create local copies of remote repositories (from github for example). We use this command a bit differently in Learn Git Branching though -- `git clone` actually makes a remote repository out of your local one. Sure it's technically the opposite meaning of the real command, but it helps build the connection between cloning and remote repository work, so let's just run with it for now.
+
+Lets start slow and just look at what a remote repository looks like (in our visualization).
+
+There it is! Now we have a remote repository of our project. It looks pretty similar except for some visual changes to make the distinction apparent -- in later levels you'll get to see how we share work across these repositories.
+
+Git Remote Branches
+Now that you've seen git clone in action, let's dive into what actually changed.
+
+The first thing you may have noticed is that a new branch appeared in our local repository called o/master. This type of branch is called a remote branch; remote branches have special properties because they serve a unique purpose.
+
+**Remote branches** reflect the state of remote repositories (since you last talked to those remote repositories). They help you understand the difference between your local work and what work is public -- a critical step to take before sharing your work with others.
+
+Remote branches have the special property that when you check them out, you are put into detached `HEAD` mode. Git does this on purpose because you can't work on these branches directly; you have to work elsewhere and then share your work with the remote (after which your remote branches will be updated).
+
+What is o/? (originc)
+You may be wondering what the leading o/ is for on these remote branches. Well, remote branches also have a (required) naming convention -- they are displayed in the format of:
+
+  - <remote name>/<branch name>
+    origin/master
+
+Hence, if you look at a branch named o/master, the branch name is master and the name of the remote is o.
+
+Most developers actually name their main remote origin, not o. This is so common that git actually sets up your remote to be named origin when you git clone a repository.
+
+Unfortunately the full name of origin does not fit in our UI, so we use o as shorthand :( Just remember when you're using real git, your remote is probably going to be named origin!
+
+That's a lot to take in, so let's see 
+> git checkout origin master
+> git commit
+
+As you can see, git put us into detached HEAD mode and then did not update o/master when we added a new commit. This is because o/master will only update when the remote updates.
+
+To finish this level, commit once off of master and once after checking out o/master. This will help drive home how remote branches behave differently, and they only update to reflect the state of the remote.
+
+1) commit once off of master 
+  > git commit
+2) commit once after checking out o/master
+  > git check out o/master
+  > git commit
+
+- Git Fetch
+Working with git remotes really just boils down to transferring data to and from other repositories. As long as we can send commits back and forth, we can share any type of update that is tracked by git (and thus share work, new files, new ideas, love letters, etc.).
+
+## Git Fetch
+In this lesson we will learn how to fetch data from a remote repository -- the command for this is conveniently named `git fetch.`
+
+You'll notice that as we update our representation of the remote repository, our remote branches will update to reflect that new representation. This ties into the previous lesson on remote branches
+
+Before getting into the details of git fetch, let's see it in action! Here we have a remote repository that contains two commits that our local repository does not have.
+
+
+There we go! Commits C2 and C3 were downloaded to our local repository, and our remote branch o/master was updated to reflect this.
+
+## What fetch does
+
+`git fetch` performs two main steps, and two main steps only. It:
+
+- downloads the commits that the remote has but are missing from our local repository, and...
+- updates where our remote branches point (for instance, `o/master`)
+
+`git fetch` essentially brings our local representation of the remote repository into synchronization with what the actual remote repository looks like (right now).
+
+If you remember from the previous lesson, we said that remote branches reflect the state of the remote repositories since you last talked to those remotes. `git fetch` is the way you talk to these remotes! Hopefully the connection between remote branches and `git fetch` is apparent now.
+
+`git fetch` usually talks to the remote repository through the Internet (via a protocol like `http://` or `git://`).
+
+### What fetch doesn't do (no change to local state)
+`git fetch`, however, does not change anything about your local state. It will not update your `master` branch or change anything about how your file system looks right now.
+
+This is important to understand because a lot of developers think that running `git fetch` will make their local work reflect the state of the remote. It may download all the necessary data to do that, but it does not actually change any of your local files. We will learn commands in later lessons to do just that :D
+
+So at the end of the day, you can think of running **`git fetch` as a download step.**
+
+- To finish the level, simply `git fetch` and download all the commits!
+
+## Git Pull
+Now that we've seen how to fetch data from a remote repository with `git fetch`, let's update our work to reflect those changes!
+
+There are actually many ways to do this -- once you have new commits available locally, you can incorporate them as if they were just normal commits on other branches. This means you could execute commands like (`git pull` is same as):
+
+> git cherry-pick o/master
+> git rebase o/master
+>git merge o/master
+etc., etc.
+In fact, the workflow of fetching remote changes and then merging them is so common that git actually provides a command that does both at once! That command is `git pull`.
+
+### fetch and a merge executed sequentially
+Let's first see a fetch and a merge executed sequentially
+
+`> git fetch`
+`> git merge origin master` (in this excercise we say git merge o/master)
+
+Boom -- we downloaded C3 with a `fetch` and then merged in that work with git merge o/master. Now our master branch reflects the new work from the remote (in this case, named origin)
+
+we used `git pull` instead?
+`> git pull`
+
+The same thing! That should make it very clear that git pull is essentially shorthand for a git fetch followed by a merge of whatever branch was just fetched.
+
+
+We will explore the details of `git pull` later (including options and arguments), but for now let's try it out in the level.
+
+Remember -- you can actually solve this level with just `fetch` and `merge`, but it will cost you an extra command :P
+
+- Simulating collaboration
+So here is the tricky thing -- for some of these upcoming lessons, we need to teach you how to pull down changes that were introduced in the remote.
+
+That means we need to essentially "pretend" that the remote was updated by one of your coworkers / friends / collaborators, sometimes on a specific branch or a certain number of commits.
+
+In order to do this, we introduced the aptly-named command git fakeTeamwork! It's pretty self explanatory, let's see a demo...
+
+The default behavior of fakeTeamwork is to simply plop down a commit on master
+
+`> git fakeTeamwork `
+
+There we go -- the remote was updated with a new commit, and we haven't downloaded that commit yet because we haven't run git fetch.
+
+You can also specify the number of commits or the branch by appending them to the command
+
+> git fakeTeamwork foo 3 #simulated a teammate pushing three commits to the `foo` branch on our remote
+
+With one command we simulated a teammate pushing three commits to the `foo` branch on our remote
+
+- chellenge:
+Go ahead and make a remote (with git clone), fake some changes on that remote, commit yourself, and then pull down those changes. It's like a few lessons in one!
+
+1) Go ahead and make a remote (with git clone), 
+> git clone
+2) fake some changes on that remote, 
+> git fakeTeamwork 2 #2 means there are 2 fake changes
+3) commit yourself, and then 
+> git commit
+4) pull down those changes. It's like a few lessons in one!
+> git pull
+
+## Git Push
+Ok, so I've fetched changes from remote and incorporated them into my work locally. That's great and all... but how do I share my awesome work with everyone else?
+
+Well, the way to upload shared work is the opposite of downloading shared work. And what's the opposite of `git pull`? `git push!`
+
+git push is responsible for uploading your changes to a specified remote and updating that remote to incorporate your new commits. Once git push completes, all your friends can then download your work from the remote.
+
+You can think of git push as a command to "publish" your work. It has a bunch of subtleties that we will get into shortly, but let's start with baby steps...
+
+note -- the behavior of git push with no arguments varies depending on one of git's settings called push.default. The default value for this setting depends on the version of git you're using, but we are going to use the upstream value in our lessons. This isn't a huge deal, but it's worth checking your settings before pushing in your own projects.
